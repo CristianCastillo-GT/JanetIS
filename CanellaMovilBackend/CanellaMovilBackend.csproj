@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\CanellaMovil\**" />
+    <Compile Remove="Controllers\OdooControllers\**" />
+    <Compile Remove="Controllers\TallerYamaha\**" />
+    <Compile Remove="Models\OdooModels\**" />
+    <Content Remove="Controllers\CanellaMovil\**" />
+    <Content Remove="Controllers\OdooControllers\**" />
+    <Content Remove="Controllers\TallerYamaha\**" />
+    <Content Remove="Models\OdooModels\**" />
+    <EmbeddedResource Remove="Controllers\CanellaMovil\**" />
+    <EmbeddedResource Remove="Controllers\OdooControllers\**" />
+    <EmbeddedResource Remove="Controllers\TallerYamaha\**" />
+    <EmbeddedResource Remove="Models\OdooModels\**" />
+    <None Remove="Controllers\CanellaMovil\**" />
+    <None Remove="Controllers\OdooControllers\**" />
+    <None Remove="Controllers\TallerYamaha\**" />
+    <None Remove="Models\OdooModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <COMReference Include="SAPbobsCOM">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>9</VersionMajor>
+      <Guid>fc8030be-f5d2-4b8e-8f92-44228fe30090</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLog" Version="5.2.8" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.3.8" />
+    <PackageReference Include="NLog.Schema" Version="5.2.8" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ConexionesSQL\ConexionesSQL.csproj" />
+    <ProjectReference Include="..\WebAPIs\WebAPIs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>
