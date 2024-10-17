@@ -1,5 +1,7 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.User_Defined_Tables;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +18,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class UserDefinedTableController : ControllerBase
     {
@@ -42,14 +45,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetDebtCollectors(int empresa)
         {
-            Company company = sapService.SAPB1();
             try
             {
-                //CompanyConnection companyConnection = sapService.SAPB1();
+                CompanyConnection companyConnection = sapService.SAPB1();
                 var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appSettings.json")
                 .Build();
+
+                Company company = companyConnection.Company;
 
                 // Obtener el objeto @COBRADOR de la API de DI
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -74,14 +78,12 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         break;
 
                     default:
-                    {
-                            sapService.SAPB1_DISCONNECT(company);
-                            return Conflict(new MessageAPI() { Result = "Fail", Message = "Empresa no válida" });
-                    }
+                        return Conflict(new MessageAPI() { Result = "Fail", Message = "Empresa no válida" });
                 }
 
                 // Ejecutar la consulta
                 recordset.DoQuery(consulta);
+                //recordset.DoQuery("SELECT Code, Name, U_ReciboIni, U_ReciboFin, U_ReciboIni2, U_ReciboFin2, U_Serie  FROM [dbo].[@COBRADORES]");
                 if (recordset.RecordCount > 0)
                 {
                     List<Cobrador> ListCobradores = [];
@@ -92,23 +94,25 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         {
                             Code = (string)recordset.Fields.Item("Code").Value,
                             Name = (string)recordset.Fields.Item("Name").Value,
+                            //U_ReciboIni = Convert.ToString(recordset.Fields.Item("U_ReciboIni").Value),
+                            //U_ReciboFin = Convert.ToString(recordset.Fields.Item("U_ReciboFin").Value),
+                            //U_ReciboIni2 = Convert.ToString(recordset.Fields.Item("U_ReciboIni2").Value),
+                            //U_ReciboFin2 = Convert.ToString(recordset.Fields.Item("U_ReciboFin2").Value),
+                            //U_Serie = (string)recordset.Fields.Item("U_Serie").Value
                         };
 
                         ListCobradores.Add(cobrador);
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListCobradores);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return NotFound(new MessageAPI() { Result = "OK", Message ="No se encontró ningun registro"  });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de cobradores - " + ex.Message });
             }
         }

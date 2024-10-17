@@ -1,5 +1,7 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.Deposit;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +19,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class DepositsServiceController : ControllerBase
     {
@@ -42,13 +45,18 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult CreateDeposit(List<ODPS> ODPSList)
         {
-            Company company = sapService.SAPB1();
+
+            CompanyConnection companyConnection = this.sapService.SAPB1();
+            Company company = companyConnection.Company;
+
+            DepositsService oDepositsService = (DepositsService)company.GetCompanyService().GetBusinessService(ServiceTypes.DepositsService);
+
+            DepositParams? DEPOSIT = null;
+
             List<MessageAPI> result = [];
+
             try
             {
-                DepositsService oDepositsService = (DepositsService)company.GetCompanyService().GetBusinessService(ServiceTypes.DepositsService);
-                DepositParams? DEPOSIT = null;
-
                 foreach (ODPS ODPS in ODPSList ?? [])
                 {
 
@@ -109,9 +117,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                sapService.SAPB1_DISCONNECT(company);
+            catch (Exception ex){
                 result?.Add(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el deposito - error: " + ex.Message });
             }
             return Ok(result);

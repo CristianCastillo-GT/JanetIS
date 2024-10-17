@@ -1,5 +1,7 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.Human_Resources;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +18,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class HumanResourcesController : ControllerBase
     {
@@ -41,9 +44,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetSalesPerson()
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("select SlpCode, SlpName, U_Email from OSLP WHERE Active = 'Y' AND SlpCode != '-1'");
                 if (recordset.RecordCount > 0)
@@ -61,18 +66,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListSalesPerson.Add(SalesPerson);
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListSalesPerson);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message ="No se encontró ningun registro"  });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de vendedores - " + ex.Message });
             }
         }

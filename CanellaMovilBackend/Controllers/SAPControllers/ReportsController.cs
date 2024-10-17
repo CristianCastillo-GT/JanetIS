@@ -1,10 +1,13 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.Reports;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SAPbobsCOM;
+using System.Globalization;
 using static CanellaMovilBackend.Models.SAPModels.Reports.CCRequestData;
 
 namespace CanellaMovilBackend.Controllers.SAPControllers
@@ -17,6 +20,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class ReportsController(ISAPService sapService) : ControllerBase
     {
@@ -31,10 +35,9 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetCarteraConsolidada(int empresa)
         {
-            Company company = sapService.SAPB1();
             try
             {
-                //CompanyConnection companyConnection;
+                CompanyConnection companyConnection;
                 string storedProcedure;
                 var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -44,20 +47,27 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 switch (empresa)
                 {
                     case 1:
+                        companyConnection = sapService.SAPB1();
                         storedProcedure = "[CRCO_STOD_CarteraCanella_ProcesarEstado_Odoo]";
                         break;
                     case 2:
+                        companyConnection = sapService.SAPB1();
                         storedProcedure = $"[{configuration.GetConnectionString("VESA") ?? ""}].[SBO_VESA].[dbo].[CRCO_STOD_CarteraVESA_ProcesarEstado_Odoo]";
                         break;
                     case 3:
+                        companyConnection = sapService.SAPB1();
                         storedProcedure = $"[{configuration.GetConnectionString("TALLER") ?? ""}].[TALLER].[dbo].[CRCO_STOD_CarteraMAUTO_ProcesarEstado_Odoo]";
                         break;
                     case 4:
+                        companyConnection = sapService.SAPB1();
                         storedProcedure = $"[{configuration.GetConnectionString("MAQUIPOS") ?? ""}].[SBO_MAQUIPOS].[dbo].[CRCO_STOD_CarteraMAQUIPOS_ProcesarEstado_Odoo]";
                         break;
                     default:
                         return BadRequest(new MessageAPI() { Result = "Fail", Message = "Empresa no válida" });
                 }
+
+                Company company = companyConnection.Company;
+
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery($"EXEC {storedProcedure}");
 
@@ -106,19 +116,16 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListCarteraConsolidada.Add(carteraConsolidada);
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListCarteraConsolidada);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "No se encontró ningun registro" });
                 }
 
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de la cartera - " + ex.Message });
             }
         }
@@ -134,9 +141,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetPagosPorClientes()
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("EXEC [dbo].[STOD_CarteraCanella_ConPlanesPagoResumen]");
                 if (recordset.RecordCount > 0)
@@ -174,18 +183,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListPagosClientes.Add(pagosCreditos);
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListPagosClientes);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "No se encontró ningun registro" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de pagos por cliente - " + ex.Message });
             }
         }
@@ -200,9 +206,9 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetEstadoPromesa(RequestPayPromise request, int empresa)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
                 string storedProcedure2;
 
                 var configuration = new ConfigurationBuilder()
@@ -213,20 +219,26 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 switch (empresa)
                 {
                     case 1:
+                        companyConnection = sapService.SAPB1();
                         storedProcedure2 = ("[UTILS].[dbo].[CRCO_ProcesarPromesa] '" + request.CardCode + "', '" + request.fechaPromesa + "', '" + request.amount + "', '" + request.status + "', '" + request.fechaCreacion + "', '" + request.idPromesa + "', '" + request.docentry + "', '" + request.porDocumento + "'");
                         break;
                     case 2:
+                        companyConnection = sapService.SAPB1();
                         storedProcedure2 = ($"[{configuration.GetConnectionString("VESA") ?? ""}].[UTILS_VESA].[dbo].[CRCO_procesarPromesa] '" + request.CardCode + "', '" + request.fechaPromesa + "', '" + request.amount + "', '" + request.status + "', '" + request.fechaCreacion + "', '" + request.idPromesa + "', '" + request.docentry + "', '" + request.porDocumento + "'");
                         break;
                     case 3:
+                        companyConnection = sapService.SAPB1();
                         storedProcedure2 = ($"[{configuration.GetConnectionString("TALLER") ?? ""}].[[UTILS].[dbo].[CRCO_procesarPromesa] '" + request.CardCode + "', '" + request.fechaPromesa + "', '" + request.amount + "', '" + request.status + "', '" + request.fechaCreacion + "', '" + request.idPromesa + "', '" + request.docentry + "', '" + request.porDocumento + "'");
                         break;
                     case 4:
+                        companyConnection = sapService.SAPB1();
                         storedProcedure2 = ($"[{configuration.GetConnectionString("MAQUIPOS") ?? ""}].[UTILS_MAQUIPOS].[dbo].[CRCO_procesarPromesa] '" + request.CardCode + "', '" + request.fechaPromesa + "', '" + request.amount + "', '" + request.status + "', '" + request.fechaCreacion + "', '" + request.idPromesa + "', '" + request.docentry + "', '" + request.porDocumento + "'");
                         break;
                     default:
                         return BadRequest(new MessageAPI() { Result = "Fail", Message = "Empresa no válida" });
                 }
+
+                Company company = companyConnection.Company;
 
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery($"EXEC {storedProcedure2}");
@@ -244,18 +256,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListaEstadoPromesa.Add(estadoPromesa);
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListaEstadoPromesa);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "No se encontró ninguna Promesa asociada" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de promesas  - " + ex.Message });
             }
         }

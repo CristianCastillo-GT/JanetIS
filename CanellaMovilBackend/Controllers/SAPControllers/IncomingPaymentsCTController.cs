@@ -1,24 +1,32 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.IncomingPayments;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SAPbobsCOM;
+using System.Data.SqlClient;
 using System.Data;
 using ConexionesSQL.STOD.RECI;
 using ConexionesSQL.Models;
+using ConexionesSQL.STOD.Dashboard;
+using Microsoft.AspNetCore.Authentication;
+using System.Text.RegularExpressions;
+using CanellaMovilBackend.Models.STODModels.Dashboard;
+using CanellaMovilBackend.Utils;
 
 namespace CanellaMovilBackend.Controllers.SAPControllers
 {
     /// <summary>
     ///  Controladore Pagos Recibidos CT
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Produces("application/json")]
-    [ServiceFilter(typeof(RoleFilter))]
+    //[ServiceFilter(typeof(RoleFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class IncomingPaymentsCTController : ControllerBase
     {
@@ -45,16 +53,19 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult BulkCReatePaymentCT(List<ORCT> ORCTList)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
                 List<MessageAPI> messageApi = [];
+
+
                 foreach (ORCT ORCT in ORCTList)
                 {
                     try
                     {
                         Payments? oIncomingPayments = (Payments)company.GetBusinessObject(BoObjectTypes.oIncomingPayments);
-                        
+
                         oIncomingPayments.DocType = (ORCT.DocType == "A" ? BoRcptTypes.rAccount : (ORCT.DocType == "C" ? BoRcptTypes.rCustomer : (ORCT.DocType == "S" ? BoRcptTypes.rSupplier : throw new InvalidOperationException("El tipo de pago no es válido"))));
                         oIncomingPayments.DocDate = DateTime.Parse(ORCT.DocDate);
                         oIncomingPayments.DueDate = DateTime.Parse(ORCT.DocDueDate);
@@ -63,13 +74,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         oIncomingPayments.CardName = ORCT.CardName;
                         oIncomingPayments.UserFields.Fields.Item("U_TipoPago").Value = "3";
                         oIncomingPayments.UserFields.Fields.Item("U_TipoPagos").Value = "3";
-                        oIncomingPayments.UserFields.Fields.Item("U_Cobrador").Value = "000";
-                        oIncomingPayments.CounterReference = getCounterRef("000")?.ToString();
                         oIncomingPayments.ControlAccount = "_SYS00000000552";
                         oIncomingPayments.Series = 221;
                         oIncomingPayments.Remarks = ORCT.Comments;
 
-                        DataTable? ohem = getCentroCosto(ORCT.U_EmpCode.ToString());
+                        DataTable ohem = getCentroCosto(ORCT.U_EmpCode.ToString());
                         if (ohem != null)
                         {
                             oIncomingPayments.UserFields.Fields.Item("U_Ceco").Value = ohem.Rows[0]["CentroCosto"]?.ToString() ?? "";
@@ -128,13 +137,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         
                     }
                 }
-                sapService.SAPB1_DISCONNECT(company);
                 return Ok(ORCTList.Select(x => new { x.CardCode, x.CardName, CreditCards = x.RCT3?.Select(
                     card => new { card.CreditCard, card.CrCardNum, card.SumPaid }), x.ErrorSAP, x.MensajeExito}));
             }
             catch (Exception ex) 
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el pago - error: " + ex.Message });
             }
         }
@@ -142,8 +149,8 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         {
             var parameters = new List<Parametros>()
             {
-                new("@CodigoVendedor", codigoVendedor)
-            };
+                    new("@CodigoVendedor", codigoVendedor)
+                };
 
             RECI CodVendedor = new();
             var resultado = CodVendedor.API_RECI_CodigoEmpleado(parameters);
@@ -156,36 +163,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
             {
                 return null;
             }
-        }
-
-        private int? getCounterRef(string cobrador) 
-        {
-            var parameters = new List<Parametros>()
-            {
-                new("@Cobrador", cobrador)
-            };
-            RECI cob = new();
-            var resultado = cob.API_RECI_CounterReference(parameters);
-
-            if (resultado.MensajeTipo == 1 && resultado.Datos is DataTable)
-            {
-                DataTable dt = (DataTable)resultado.Datos;
-
-                if (dt.Rows.Count > 0)
-                {
-                    // Supongamos que el valor que necesitas está en la primera fila y primera columna
-                    return Convert.ToInt32(dt.Rows[0][0]);
-                }
-                else
-                {
-                    // Manejo de caso cuando no hay datos
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+           
         }
 
         private int GetInvoiceDocEntryByNumAtCard(Company company, string numAtCard)
@@ -198,6 +176,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
             {
                 return Convert.ToInt32(recordset.Fields.Item("DocEntry").Value);
             }
+
             return 0; // Si no se encuentra la factura
         }
     }

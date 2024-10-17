@@ -1,3 +1,4 @@
+using CanellaMovilBackend.Filters;
 using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Middleware;
 using CanellaMovilBackend.Service.SAPService;
@@ -20,7 +21,9 @@ builder.Services.AddControllers();
 builder.Services.AddMvc();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<ISAPService, SAPService>();
+builder.Services.AddScoped<SAPConnectionFilter>();
 builder.Services.AddScoped<RoleFilter>();
+builder.Services.AddScoped<SAPConnectionFilter>();
 builder.Services.AddScoped<BlockEndpointFilter>();
 builder.Services.AddScoped<STODFilter>();
 builder.Services.AddScoped<ResultAllFilter>();

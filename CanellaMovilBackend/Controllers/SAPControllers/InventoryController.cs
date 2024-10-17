@@ -1,5 +1,7 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.Inventory;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +19,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class InventoryController : ControllerBase
     {
@@ -42,9 +45,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetItemInventory(RequestGetItem request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Obtener el item de la base de datos de SAP
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("SELECT  ItemName, SellItem, PrchSeItem, ItmsGrpCod, ItemCode, '' Barcode, AvgPrice, OnHand,'' Transito,'' Price  FROM OITM WITH (NOLOCK) WHERE ItemCode='" + request.ItemCode + "'");
@@ -98,18 +103,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         }
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(item);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar el item con el codigo: " + request.ItemCode });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar el item con el codigo: " + request.ItemCode + " - " + ex.Message });
             }
         }
@@ -125,9 +127,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetItemExistence(RequestGetItem request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Obtener el item de la base de datos de SAP
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("SELECT T1.ItemCode, T1.WhsCode, T1.OnHand FROM OITW T1 WITH (NOLOCK) WHERE T1.OnHand >= 1 " + (!(request.ItemCode == "*") ? " AND T1.ItemCode = '" + request.ItemCode + "' " : ""));
@@ -145,18 +149,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ItemList.Add(item);
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ItemList);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar el item con el codigo: " + request.ItemCode });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de existencias - Error: " + ex.Message });
             }
         }
@@ -172,13 +173,16 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetItemInventoryMassive(RequestGetItemMassive request)
         {
-            if (request.InitialDate == null || request.FinalDate == null || request.InitialDate == "" || request.FinalDate == "")
-            {
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "Debe especificar la fecha inicial y fecha final" });
-            }
-            Company company = sapService.SAPB1();
             try
             {
+                if (request.InitialDate == null || request.FinalDate == null || request.InitialDate == "" || request.FinalDate == "")
+                {
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "Debe especificar la fecha inicial y fecha final" });
+                }
+
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Obtener el item de la base de datos de SAP
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("SELECT  ItemName, SellItem, PrchSeItem, ItmsGrpCod, ItemCode, '' Barcode, AvgPrice, OnHand,'' Transito,'' Price  FROM OITM WITH (NOLOCK) WHERE (CreateDate  between '" + request.InitialDate + "' and '" + request.FinalDate + "') or  (UpdateDate  between '" + request.InitialDate + "' and '" + request.FinalDate + "')");
@@ -233,18 +237,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         itemList?.Add(item ?? new OITM());
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(itemList);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "No se encontro ningun registro en el rango de fechas seleccionado" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de items - Error" + ex.Message });
             }
         }
@@ -260,13 +261,16 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetItemInventoryByDivision(RequestGetItemByDivisionMassive request)
         {
-            if (request.InitialDate == null || request.FinalDate == null || request.InitialDate == "" || request.FinalDate == "")
-            {
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "Debe especificar la fecha inicial y fecha final" });
-            }
-            Company company = sapService.SAPB1();
             try
             {
+                if (request.InitialDate == null || request.FinalDate == null || request.InitialDate == "" || request.FinalDate == "")
+                {
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "Debe especificar la fecha inicial y fecha final" });
+                }
+
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Obtener el item de la base de datos de SAP
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("SELECT  ItemName, SellItem, PrchSeItem, ItmsGrpCod, ItemCode, '' Barcode, AvgPrice, OnHand,'' Transito,'' Price  FROM OITM WITH (NOLOCK) WHERE ((CreateDate  between '" + request.InitialDate + "' and '" + request.FinalDate + "') or  (UpdateDate  between '" + request.InitialDate + "' and '" + request.FinalDate + "')) and U_ClasDivision = '"+ request.Division +"'");
@@ -322,18 +326,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         itemList?.Add(item ?? new OITM());
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(itemList);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "No se encontro ningun registro en el rango de fechas seleccionado" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de items - Error" + ex.Message });
             }
         }

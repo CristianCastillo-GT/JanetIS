@@ -1,10 +1,15 @@
-﻿using CanellaMovilBackend.Models;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Models.CQMModels;
+using CanellaMovilBackend.Models.SAPModels.PageCanon;
+using CanellaMovilBackend.Models;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SAPbobsCOM;
+using static CanellaMovilBackend.Models.MotulTopKe.MotulRequestData;
 using CanellaMovilBackend.Models.MotulTopKe;
 using CanellaMovilBackend.Filters.UserFilter;
+using CanellaMovilBackend.Models.PaginasWebModels;
 
 namespace CanellaMovilBackend.Controllers.MotulTopKe
 {
@@ -15,6 +20,8 @@ namespace CanellaMovilBackend.Controllers.MotulTopKe
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Produces("application/json")]
+    //[ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class MotulTopKeController : ControllerBase
     {
@@ -40,9 +47,11 @@ namespace CanellaMovilBackend.Controllers.MotulTopKe
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetInventario(MotulRequestData.RequestGetInventarioMotul request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.clsEmpresa ??= "";
 
                 // Obtener el objeto categoria de la API de DI
@@ -65,18 +74,15 @@ namespace CanellaMovilBackend.Controllers.MotulTopKe
                         List_Inventario.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Inventario);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion del inventario de maquinaria" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de inventario de maquinaria: " + ex.Message });
             }
         }

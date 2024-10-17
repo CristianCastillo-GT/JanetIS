@@ -78,7 +78,7 @@ namespace CanellaMovilBackend.Models.SAPModels.OutgoingPayments
         /// <summary>
         /// Tipo de pago
         /// </summary>
-        public string U_TipoPago { get; set; } = string.Empty;
+        public string U_TipoPago { get; set; } = "3";
 
         /// <summary>
         /// CheckSum / Suma de Cheques

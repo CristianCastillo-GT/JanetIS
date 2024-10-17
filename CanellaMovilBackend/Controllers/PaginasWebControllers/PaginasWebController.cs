@@ -1,8 +1,14 @@
-﻿using CanellaMovilBackend.Models;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Models.CQMModels;
+using CanellaMovilBackend.Models.SAPModels.PageCanon;
+using CanellaMovilBackend.Models;
 using CanellaMovilBackend.Service.SAPService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SAPbobsCOM;
+using static CanellaMovilBackend.Models.PaginasWebModels.MRequestData;
 using CanellaMovilBackend.Models.PaginasWebModels;
+using CanellaMovilBackend.Filters.UserFilter;
 
 namespace CanellaMovilBackend.Controllers.PaginasWebControllers
 {
@@ -15,6 +21,7 @@ namespace CanellaMovilBackend.Controllers.PaginasWebControllers
     [ApiController]
     [Produces("application/json")]
     //[ServiceFilter(typeof(RoleFilter))]
+    //[ServiceFilter(typeof(SAPConnectionFilter))]
     //[ServiceFilter(typeof(ResultAllFilter))]
     public class PaginasWebController : ControllerBase
     {
@@ -40,9 +47,11 @@ namespace CanellaMovilBackend.Controllers.PaginasWebControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetInventarioMaquinaria(MRequestData.RequestGetInventarioMaquinaria request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.AddId ??= "";
                 request.clsEmpresa ??= "";
                 request.PlataformaConsumo ??= "";
@@ -66,18 +75,15 @@ namespace CanellaMovilBackend.Controllers.PaginasWebControllers
                         List_Inventario.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Inventario);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion del inventario de maquinaria" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de inventario de maquinaria: " + ex.Message });
             }
         }
@@ -92,9 +98,11 @@ namespace CanellaMovilBackend.Controllers.PaginasWebControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetClienteFacturacion(MRequestData.RequestGetClientesFacturacionMaquinaria request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.AddId ??= "";
                 request.clsEmpresa ??= "";
                
@@ -124,18 +132,15 @@ namespace CanellaMovilBackend.Controllers.PaginasWebControllers
                         List_Clientes.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Clientes);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion del inventario de maquinaria" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de inventario de maquinaria: " + ex.Message });
             }
         }

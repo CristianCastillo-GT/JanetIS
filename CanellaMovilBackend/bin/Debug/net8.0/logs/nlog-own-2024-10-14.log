@@ -1,0 +1,6 @@
+2024-10-14 11:37:33.1472||INFO|CanellaMovilBackend.Utils.LogsAPI|-- |url: |action: 
+2024-10-14 11:37:33.1776||INFO|CanellaMovilBackend.Utils.LogsAPI|Usuario: 97954486-2367-426a-9107-71676f0c2084, Role: administrador, Action: GetRate, Controller: Rate, Argumentos:  |url: |action: 
+2024-10-14 11:37:33.2961||INFO|CanellaMovilBackend.Utils.LogsAPI|Acceso concedido |url: |action: 
+2024-10-14 11:37:36.7441||INFO|CanellaMovilBackend.Utils.LogsAPI|-- Resultado |url: |action: 
+2024-10-14 11:37:36.7441||INFO|CanellaMovilBackend.Utils.LogsAPI|Usuario: 97954486-2367-426a-9107-71676f0c2084, Role: administrador, Action: GetRate, Controller: Rate,StatusCode: 200,  |url: |action: 
+2024-10-14 11:37:36.7441||INFO|CanellaMovilBackend.Utils.LogsAPI|--------------- |url: |action: 

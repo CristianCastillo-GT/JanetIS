@@ -1,7 +1,9 @@
 ﻿using CanellaMovilBackend.Filters.UserFilter;
+using CanellaMovilBackend.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CanellaMovilBackend.Service.SAPService;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models;
 using SAPbobsCOM;
 using CanellaMovilBackend.Models.SAPModels.AlertsManagement;
@@ -16,6 +18,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class AlertsManagementController : ControllerBase
     {
@@ -42,12 +45,14 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult SendAlert(AlertSAP alertSAP)
         {
-            Company? company = this.sapService.SAPB1();
             try
             {
-                CompanyService? oCmpSrv = company.GetCompanyService();
-                MessagesService? oMessageService = (MessagesService)oCmpSrv.GetBusinessService(ServiceTypes.MessagesService);
-                Message? oMessage = (Message)oMessageService.GetDataInterface(MessagesServiceDataInterfaces.msdiMessage);
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
+                
+                CompanyService oCmpSrv = company.GetCompanyService();
+                MessagesService oMessageService = (MessagesService)oCmpSrv.GetBusinessService(ServiceTypes.MessagesService);
+                Message oMessage = (Message)oMessageService.GetDataInterface(MessagesServiceDataInterfaces.msdiMessage);
 
                 oMessage.Subject = alertSAP.Subject;
                 oMessage.Text = alertSAP.Text;
@@ -84,12 +89,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     }
                 }
                 oMessageService.SendMessage(oMessage);
-                sapService.SAPB1_DISCONNECT(company);
+
                 return Ok(new MessageAPI() { Result = "OK", Message = "Alerta Enviada." });
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo enviar la alerta: " + ex.Message });
             }
         }

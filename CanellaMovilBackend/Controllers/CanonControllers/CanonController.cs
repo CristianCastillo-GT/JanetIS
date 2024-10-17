@@ -1,4 +1,6 @@
-﻿using CanellaMovilBackend.Models;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.PageCanon;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +12,6 @@ using static CanellaMovilBackend.Models.SAPModels.PageCanon.SORequestData;
 using static CanellaMovilBackend.Models.SAPModels.PageCanon.SWRequestData;
 using static CanellaMovilBackend.Models.SAPModels.PageCanon.INRequestData;
 using static CanellaMovilBackend.Models.SAPModels.PageCanon.IDRequestData;
-using CanellaMovilBackend.Filters.UserFilter;
 
 namespace CanellaMovilBackend.Controllers.CanonControllers
 {
@@ -22,7 +23,7 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
     [ApiExplorerSettings(IgnoreApi = true)]
     [ApiController]
     [Produces("application/json")]
-    [ServiceFilter(typeof(ResultAllFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     public class CanonController : Controller
     {
         private readonly ISAPService sapService;
@@ -47,9 +48,11 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetCardCode(RequestGetCardCode request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.AddId ??= "";
 
                 // Obtener el objeto categoria de la API de DI
@@ -75,18 +78,15 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
                         List_CardCode.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_CardCode);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion del cliente" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de categorias: " + ex.Message });
             }
         }
@@ -101,9 +101,11 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetDashBoard(RequestGetDashBoard request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.AddId ??= "";
 
                 // Obtener el objeto categoria de la API de DI
@@ -127,18 +129,15 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
                         List_DashBoard.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_DashBoard);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion del DashBoard" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de categorias: " + ex.Message });
             }
         }
@@ -153,9 +152,11 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetSalesOrder(RequestGetSalesOrder request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.AddId ??= "";
 
                 // Obtener el objeto categoria de la API de DI
@@ -180,18 +181,15 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
                         List_SalesOrder.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_SalesOrder);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion de los documentos solicitados" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de documentos: " + ex.Message });
             }
         }
@@ -206,9 +204,11 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetStockWhareHouse(RequestGetStockWhareHouse request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.AddId ??= "";
 
                 // Obtener el objeto categoria de la API de DI
@@ -233,18 +233,15 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
                         List_Stock.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Stock);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion de inventario por bodega" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de inventario por bodega: " + ex.Message });
             }
         }
@@ -259,9 +256,11 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetInventory(RequestGetInventory request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.AddId ??= "";
 
                 // Obtener el objeto categoria de la API de DI
@@ -291,19 +290,16 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
                         List_Inventory.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Inventory);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion de inventario" });
                 }
 
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de inventario: " + ex.Message });
             }
         }
@@ -318,9 +314,11 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetItemCodeDetail(RequestGetInventoryDetail request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.AddId ??= "";
 
                 // Obtener el objeto categoria de la API de DI
@@ -350,18 +348,15 @@ namespace CanellaMovilBackend.Controllers.CanonControllers
                         List_Inventory.Add(code);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Inventory);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion de inventario" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de inventario: " + ex.Message });
             }
         }

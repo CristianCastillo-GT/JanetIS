@@ -1,23 +1,34 @@
 ﻿using CanellaMovilBackend.Filters.UserFilter;
+using CanellaMovilBackend.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Xml;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models;
 using CanellaMovilBackend.Service.SAPService;
 using SAPbobsCOM;
+using System.Drawing;
 using System.Globalization;
+using CanellaMovilBackend.Models.SAPModels;
+using ConexionesSQL.Models;
+using System.Data;
+using ConexionesSQL.SAP;
+
+
 
 namespace CanellaMovilBackend.Controllers.SAPControllers.Utils
 {
     /// <summary>
     /// Controlador para obtener el tipo de cambio
     /// </summary>
+    
     [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class RateController : ControllerBase
     {
@@ -55,12 +66,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers.Utils
               </soap:Body>
             </soap:Envelope>";
 
-            string? fecha = null;
-            string? referencia = null;
+            string fecha = null;
+            string referencia = null;
 
-            Company company = sapService.SAPB1();
             try
             {
+
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Crear una instancia de HttpContent con el contenido SOAP y el tipo de contenido
                 HttpContent content = new StringContent(soapRequest, Encoding.UTF8, "text/xml");
 
@@ -85,12 +99,12 @@ namespace CanellaMovilBackend.Controllers.SAPControllers.Utils
                     nsmgr.AddNamespace("ns", "http://www.banguat.gob.gt/variables/ws/");
 
                     // Buscar el nodo TipoCambioDiaResult
-                    XmlNode? resultNode = xmlDoc.SelectSingleNode("//ns:TipoCambioDiaResult", nsmgr);
+                    XmlNode resultNode = xmlDoc.SelectSingleNode("//ns:TipoCambioDiaResult", nsmgr);
 
                     if (resultNode != null)
                     {
                         // Extrae fecha y tipo de cambio
-                        XmlNode? dolarNode = resultNode.SelectSingleNode("ns:CambioDolar/ns:VarDolar", nsmgr);
+                        XmlNode dolarNode = resultNode.SelectSingleNode("ns:CambioDolar/ns:VarDolar", nsmgr);
 
                         if (dolarNode != null)
                         {
@@ -117,38 +131,38 @@ namespace CanellaMovilBackend.Controllers.SAPControllers.Utils
                                         //Hace el insert a SAP tabla ORTT
                                         oSBObob.SetCurrencyRate("USD", fechaValue, referenciaValue, true);
 
-                                        sapService.SAPB1_DISCONNECT(company);
+
                                         return Ok("Tipo de cambio agregado correctamente. ");
+
+
+                
                                     }
-                                    sapService.SAPB1_DISCONNECT(company);
                                     return BadRequest("Error en el formato de la fecha.");
                                 }
-                                sapService.SAPB1_DISCONNECT(company);
                                 return BadRequest("Error al obtener el valor de cambio.");
                             }
-                            sapService.SAPB1_DISCONNECT(company);
                             return BadRequest("Una de las 2 variables no devuelve datos.");
                         }
-                        sapService.SAPB1_DISCONNECT(company);
                         return BadRequest("No se pudo encontrar el nodo VarDolar en la respuesta.");
                     }
                     else
                     {
-                        sapService.SAPB1_DISCONNECT(company);
                         return BadRequest("No se encontró el nodo TipoCambioDiaResult en la respuesta.");
                     }
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return BadRequest("Error al llamar al servicio web. Código de estado: " + response.StatusCode);
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return StatusCode(500, "Error: " + ex.Message);
             }
+
+
         }
+
+
     }
 }

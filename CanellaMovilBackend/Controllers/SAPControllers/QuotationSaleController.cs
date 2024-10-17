@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CanellaMovilBackend.Filters;
+using Microsoft.AspNetCore.Mvc;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Service.SAPService;
 using CanellaMovilBackend.Models;
-using Microsoft.AspNetCore.Authorization;
 using SAPbobsCOM;
 using CanellaMovilBackend.Models.SAPModels.SalesQuotation;
 using static CanellaMovilBackend.Models.SAPModels.SalesQuotation.RequestDataQuotation;
@@ -12,11 +13,12 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     /// <summary>
     /// Controlador del socio de negocios
     /// </summary>
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class QuotationSaleController : Controller
     {
@@ -42,9 +44,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult CreateQuotation(OQUT OQUT)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 Documents saleQuotation = (Documents)company.GetBusinessObject(BoObjectTypes.oQuotations);
                 //Encabezado
                 saleQuotation.DocDate = Convert.ToDateTime(OQUT.DocDate);
@@ -100,17 +104,14 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 int result = saleQuotation.Add();
                 if (result != 0)
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear la oferta de ventas: " + company.GetLastErrorDescription() });
                 }
                 company.GetNewObjectCode(out string DocEntry);
                 saleQuotation.GetByKey(Convert.ToInt32(DocEntry));
-                sapService.SAPB1_DISCONNECT(company);
                 return Ok(new { Result = "OK", Message = "El documento fue creado correctamente.", Code = saleQuotation.DocNum.ToString(), DocEntry = saleQuotation.DocEntry.ToString()});
             }
             catch (Exception Ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear la oferta de ventas: " + Ex });
             }
         }
@@ -126,9 +127,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetQuotation(RequestGetQuotation request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Obtener el objeto BusinessPartners de la API de DI
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("SELECT DocNum, DocEntry, DocDate, Cardcode, CardName, NumAtCard, DocStatus FROM OQUT WITH (NOLOCK) WHERE DocNum=" + request.DocNum);
@@ -166,15 +169,12 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la cotización: DocNum=" + request.DocNum });
                 }
-                sapService.SAPB1_DISCONNECT(company);
                 return Ok(new { quotation?.DocNum, quotation?.DocEntry, quotation?.CardCode, quotation?.CardName, quotation?.NumAtCard, quotation?.DocStatus, Items = quotation?.Items?.Select(x => new { x.DocEntry, x.ItemCode, x.Dscription, x.Quantity, x.LineTotal, x.Whscode }) });
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la cotización: DocNum = " + request.DocNum + " Error: " + ex.Message });
             }
         }

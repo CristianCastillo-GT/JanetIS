@@ -1,5 +1,7 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SISCONModels;
 using CanellaMovilBackend.Service.SAPService;
 using ConexionesSQL.Models;
@@ -21,6 +23,7 @@ namespace CanellaMovilBackend.Controllers.SISCONControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class DispatchController : ControllerBase
     {
@@ -45,7 +48,8 @@ namespace CanellaMovilBackend.Controllers.SISCONControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult ActivoFijoEntrega(List<DeliveryNodo> nodos)
         {
-            Company company = sapService.SAPB1();
+            CompanyConnection companyConnection = this.sapService.SAPB1();
+            Company company = companyConnection.Company;
             try
             {
                 if (nodos != null && nodos.Count > 0)
@@ -67,7 +71,7 @@ namespace CanellaMovilBackend.Controllers.SISCONControllers
 
                             if (oItem.GetByKey(nodo.CodigoArticulo))
                             {
-                                double precioArticuloSAP = nodo.precio;
+                                double precioArticuloSAP = oItem.AvgStdPrice;
                                 bool articuloDepreciable = precioArticuloSAP >= double.Parse(nodo.MontoMinimoAF);
 
                                 // Creación del activo fijo en SAP
@@ -172,7 +176,6 @@ namespace CanellaMovilBackend.Controllers.SISCONControllers
                         if (resultado.MensajeDescripcion == "ACTUALIZADO")
                         {
                             company.EndTransaction(BoWfTransOpt.wf_Commit);
-                            sapService.SAPB1_DISCONNECT(company);
                             return Ok(new MessageAPI() { Message = "Activos Fijos y Capitalizacion creada." });
                         }
                         else
@@ -187,7 +190,6 @@ namespace CanellaMovilBackend.Controllers.SISCONControllers
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Message = "No hay registros para procesar." });
                 }
             }
@@ -195,7 +197,6 @@ namespace CanellaMovilBackend.Controllers.SISCONControllers
             {
                 if (company.InTransaction)
                     company.EndTransaction(BoWfTransOpt.wf_RollBack);
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Message = ex.Message });
             }
         }
