@@ -1,5 +1,7 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.Bank_Statements_and_External_Reconciliations;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +19,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class ExternalBankStatementController : ControllerBase
     {
@@ -42,10 +45,12 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult CreateBnkRecord(List<OBNK> OBNKList)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
                 BankPages bnkPage = company.GetBusinessObject(BoObjectTypes.oBankPages);
+
                 List<MessageAPI> ListMessage = [];
 
                 foreach (OBNK OBNK in OBNKList.Where(x => DateTime.Compare(DateTime.ParseExact(x.DueDate, "dd/MM/yyyy", null), DateTime.Today) < 0) ?? [])
@@ -71,12 +76,10 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListMessage.Add(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el registro - error: " + ex.Message });
                     }
                 }
-                sapService.SAPB1_DISCONNECT(company);
                 return Ok(ListMessage);
             }
             catch(Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear los registros - error: " + ex.Message });
             }
         }

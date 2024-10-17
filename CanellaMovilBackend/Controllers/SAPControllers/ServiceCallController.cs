@@ -1,9 +1,11 @@
 ﻿using CanellaMovilBackend.Filters.UserFilter;
+using CanellaMovilBackend.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CanellaMovilBackend.Service.SAPService;
 using CanellaMovilBackend.Models;
 using SAPbobsCOM;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.ServiceCall;
 using ConexionesSQL.SAP;
 using ConexionesSQL.Models;
@@ -19,6 +21,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class ServiceCallController(ISAPService sapService) : ControllerBase
     {
@@ -35,9 +38,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult<MessageAPI> CreateServiceCall(ServiceCall serviceCall)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 ServiceCalls service = (ServiceCalls)company.GetBusinessObject(BoObjectTypes.oServiceCalls);
 
                 service.Series = serviceCall.Series;
@@ -62,19 +67,16 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 if (service.Add() == 0)
                 {
                     var docentry = company.GetNewObjectKey();
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "Creada la llamada de servicio exitosamente", Code = docentry });
                 }
                 else
                 {
                     company.GetLastError(out int errCode, out string errMsg);
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = errMsg, Code = string.Empty });
                 }
             }
             catch(Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = ex.Message });
             }
         }
@@ -91,9 +93,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult<MessageAPI> UpdateRelationServiceCall(RelationServiceCall relationServiceCall)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 ServiceCalls serviceCall = (ServiceCalls)company.GetBusinessObject(BoObjectTypes.oServiceCalls);
                 Documents orderSale = (Documents)company.GetBusinessObject(BoObjectTypes.oOrders);
 
@@ -108,25 +112,21 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     serviceCall.Expenses.DocumentType = BoSvcEpxDocTypes.edt_Order;
                     if (serviceCall.Update() == 0)
                     {
-                        sapService.SAPB1_DISCONNECT(company);
                         return Ok(new MessageAPI() { Result = "OK", Message = "Relacion entre la orden de venta y la llamada de servicio exitosa" });
                     }
                     else
                     {
                         company.GetLastError(out int errCode, out string errMsg);
-                        sapService.SAPB1_DISCONNECT(company);
                         return Conflict(new MessageAPI() { Result = "Fail", Message = errMsg, Code = string.Empty });
                     }
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "El cliente de la orden es diferente al de la llamada de servicio"});
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = ex.Message });
             }
         }

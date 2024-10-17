@@ -1,4 +1,5 @@
-﻿using SAPbobsCOM;
+﻿using CanellaMovilBackend.Models.CQMModels;
+using SAPbobsCOM;
 
 namespace CanellaMovilBackend.Service.SAPService
 {
@@ -8,6 +9,10 @@ namespace CanellaMovilBackend.Service.SAPService
     public class SAPService : ISAPService
     {
         private readonly IHttpContextAccessor _httpContextAccesor;
+        /// <summary>
+        /// CanellaConnection
+        /// </summary>
+        public CompanyConnection? Connections;
 
         /// <summary>
         /// Constructor
@@ -21,7 +26,7 @@ namespace CanellaMovilBackend.Service.SAPService
         /// <summary>
         /// función que abre y retorna la conexión hacia SAP B1
         /// </summary>
-        public Company SAPB1()
+        public CompanyConnection SAPB1()
         {
             Company company;
 
@@ -52,20 +57,13 @@ namespace CanellaMovilBackend.Service.SAPService
             company.UseTrusted = false;
             company.language = BoSuppLangs.ln_English;
             company.Connect();
+            CompanyConnection companyConnection = new CompanyConnection();
+            companyConnection.Name = "Canella";
+            companyConnection.Connected = company.Connected;
+            companyConnection.Company = company;
+            string holi = company.GetLastErrorDescription();
 
-            return company;
-        }
-
-        /// <summary>
-        /// Desconecta de SAP
-        /// </summary>
-        /// <param name="company"></param>
-        public void SAPB1_DISCONNECT(Company company)
-        {
-            if (company != null && company.Connected)
-            {
-                company.Disconnect();
-            }
+            return companyConnection;
         }
     }
 }

@@ -1,0 +1,18 @@
+2024-10-14 11:37:33.1472 INFO --              
+ INFOAGARCIA             27416             CanellaMovilBackend             (ControllerActionInvoker.InvokeNextActionFilterAsync => ControllerActionInvoker.Next => ControllerActionInvoker.InvokeNextActionFilterAsync => ControllerActionInvoker.Next => ActionFilterAttribute.OnActionExecutionAsync => AsyncTaskMethodBuilder.Start => AsyncMethodBuilderCore.Start => <OnActionExecutionAsync>d__6.MoveNext => RoleFilter.OnActionExecuting => LogsAPI.Info)                 
+ --
+2024-10-14 11:37:33.1776 INFO Usuario: 97954486-2367-426a-9107-71676f0c2084, Role: administrador, Action: GetRate, Controller: Rate, Argumentos:               
+ INFOAGARCIA             27416             CanellaMovilBackend             (ControllerActionInvoker.InvokeNextActionFilterAsync => ControllerActionInvoker.Next => ControllerActionInvoker.InvokeNextActionFilterAsync => ControllerActionInvoker.Next => ActionFilterAttribute.OnActionExecutionAsync => AsyncTaskMethodBuilder.Start => AsyncMethodBuilderCore.Start => <OnActionExecutionAsync>d__6.MoveNext => RoleFilter.OnActionExecuting => LogsAPI.Info)                 
+ --
+2024-10-14 11:37:33.2961 INFO Acceso concedido              
+ INFOAGARCIA             27416             CanellaMovilBackend             (ControllerActionInvoker.InvokeNextActionFilterAsync => ControllerActionInvoker.Next => ControllerActionInvoker.InvokeNextActionFilterAsync => ControllerActionInvoker.Next => ActionFilterAttribute.OnActionExecutionAsync => AsyncTaskMethodBuilder.Start => AsyncMethodBuilderCore.Start => <OnActionExecutionAsync>d__6.MoveNext => RoleFilter.OnActionExecuting => LogsAPI.Info)                 
+ --
+2024-10-14 11:37:36.7441 INFO -- Resultado              
+ INFOAGARCIA             27416             CanellaMovilBackend             (<OnResultExecutionAsync>d__9.MoveNext => ResourceInvoker.InvokeNextResultFilterAwaitedAsync => ResourceInvoker.InvokeNextResultFilterAsync => ResourceInvoker.ResultNext => ResultFilterAttribute.OnResultExecutionAsync => AsyncTaskMethodBuilder.Start => AsyncMethodBuilderCore.Start => <OnResultExecutionAsync>d__6.MoveNext => ResultAllFilter.OnResultExecuting => LogsAPI.Info)                 
+ --
+2024-10-14 11:37:36.7441 INFO Usuario: 97954486-2367-426a-9107-71676f0c2084, Role: administrador, Action: GetRate, Controller: Rate,StatusCode: 200,               
+ INFOAGARCIA             27416             CanellaMovilBackend             (<OnResultExecutionAsync>d__9.MoveNext => ResourceInvoker.InvokeNextResultFilterAwaitedAsync => ResourceInvoker.InvokeNextResultFilterAsync => ResourceInvoker.ResultNext => ResultFilterAttribute.OnResultExecutionAsync => AsyncTaskMethodBuilder.Start => AsyncMethodBuilderCore.Start => <OnResultExecutionAsync>d__6.MoveNext => ResultAllFilter.OnResultExecuting => LogsAPI.Info)                 
+ --
+2024-10-14 11:37:36.7441 INFO ---------------              
+ INFOAGARCIA             27416             CanellaMovilBackend             (<OnResultExecutionAsync>d__9.MoveNext => ResourceInvoker.InvokeNextResultFilterAwaitedAsync => ResourceInvoker.InvokeNextResultFilterAsync => ResourceInvoker.ResultNext => ResultFilterAttribute.OnResultExecutionAsync => AsyncTaskMethodBuilder.Start => AsyncMethodBuilderCore.Start => <OnResultExecutionAsync>d__6.MoveNext => ResultAllFilter.OnResultExecuting => LogsAPI.Info)                 
+ --

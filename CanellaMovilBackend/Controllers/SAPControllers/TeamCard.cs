@@ -1,4 +1,5 @@
 ﻿using CanellaMovilBackend.Filters.UserFilter;
+using CanellaMovilBackend.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CanellaMovilBackend.Service.SAPService;
@@ -6,6 +7,7 @@ using CanellaMovilBackend.Models;
 using CanellaMovilBackend.Models.SAPModels.TeamCard;
 using ConexionesSQL.Models;
 using CanellaMovilBackend.Utils;
+using CanellaMovilBackend.Models.CQMModels;
 using SAPbobsCOM;
 using CanellaMovilBackend.Models.SAPModels.Reports;
 
@@ -23,6 +25,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class TeamCard(ISAPService sapService) : ControllerBase
     {
@@ -37,9 +40,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult CreateTeamCard(CreateTC CreateTC)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Se obtiene el objeto CustomerEquipmentCards de la API de DI
                 CustomerEquipmentCards EquipmentCard = (CustomerEquipmentCards)company.GetBusinessObject(BoObjectTypes.oCustomerEquipmentCards);
 
@@ -53,19 +58,16 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 // Validación para insertar los datos en la creación
                 if (EquipmentCard.Add() != 0)
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear la tarjeta de equipo: " + company.GetLastErrorDescription() });
                 }
                 else
                 {
                     var docentry = company.GetNewObjectKey();
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "La tarjeta de equipo fue creada correctamente.", Code = docentry });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear la tarjeta de equipo: " + ex.Message });
             }
         }
@@ -86,8 +88,8 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         {
             try
             {
-                //CompanyConnection companyConnection = sapService.SAPB1();
-                Company company = sapService.SAPB1();
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
 
                 CustomerEquipmentCards EquipmentCard = (CustomerEquipmentCards)company.GetBusinessObject(BoObjectTypes.oCustomerEquipmentCards);
 

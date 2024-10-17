@@ -1,6 +1,8 @@
 ﻿using CanellaMovilBackend.Filters.UserFilter;
+using CanellaMovilBackend.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Service.SAPService;
 using CanellaMovilBackend.Models;
 using SAPbobsCOM;
@@ -21,6 +23,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class OrderSaleController : Controller
     {
@@ -47,9 +50,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult CreateOrder(SaleOrder ORDR)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 Documents saleOrder = (Documents)company.GetBusinessObject(BoObjectTypes.oOrders);
                 saleOrder.CardCode = ORDR.CardCode;
                 saleOrder.DocDate = ORDR.DocDate;
@@ -99,7 +104,6 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     _ = int.TryParse(docEntry, out int docEntry2);
                     if (saleOrderCreated.GetByKey(docEntry2))
                     {
-                        sapService.SAPB1_DISCONNECT(company);
                         return Ok(new MessageAPI() {
                             Result = "OK",
                             Message = "Creada la orden de ventas exitosamente",
@@ -109,7 +113,6 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     }
                     else
                     {
-                        sapService.SAPB1_DISCONNECT(company);
                         return Ok(new MessageAPI() {
                             Result = "OK",
                             Message = "Se creo el documento pero no se pudo obtener su DocNum, se enviara el docentry",
@@ -121,12 +124,10 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 else
                 {
                     company.GetLastError(out int errCode, out string errMsg);
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = $"No se creo la orden de venta: {errMsg}", Code = string.Empty });
                 }
             }
             catch(Exception ex){
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear la orden de venta: " + ex.Message });
             }
         }
@@ -142,7 +143,6 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetSalesOrders(RequestGetOrders request)
         {
-            Company company = sapService.SAPB1();
             try
             {
                 if (request.InitialDate == null || request.FinalDate == null || request.InitialDate == "" || request.FinalDate == "")
@@ -150,6 +150,10 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     request.InitialDate = DateTime.Now.ToString("yyyy-MM-dd");
                     request.FinalDate = DateTime.Now.ToString("yyyy-MM-dd");
                 }
+
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Obtener el objeto BusinessPartners de la API de DI
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("SELECT TOP(175) DocNum, DocEntry, DocDate, Cardcode, CardName, NumAtCard, DocStatus, CANCELED FROM ORDR WITH (NOLOCK) WHERE (DocDate  between '" + request.InitialDate + "' and ' " + request.FinalDate + "') and SlpCode='" + request.SlpCode + "' "+ (request.status == "O" || request.status == "C" ? "and DocStatus='"+request.status+"'" : "") +" order by DocDate desc");
@@ -190,18 +194,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListORDR?.Add(new { order?.DocNum, order?.DocDate, order?.DocEntry, order?.CardCode, order?.CardName, order?.NumAtCard, order?.DocStatus, order?.CANCELED, Items = order?.Items?.Select(x => new { x.DocEntry, x.ItemCode, x.Dscription, x.Quantity, x.LineTotal, x.Whscode }) });
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListORDR);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "No se encontraron documentos relacionados con el codigo de vendedor: " + request.SlpCode });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo realizar la busqueda " + ex.Message });
             }
         }

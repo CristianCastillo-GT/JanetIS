@@ -1,4 +1,5 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
 using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.BusinessPartner;
@@ -19,6 +20,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class BusinessPartnerController : ControllerBase
     {
@@ -44,19 +46,22 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetBusinessPartner(RequestGetBusinessPartner request)
         {
-            if (request.CardCode == null && request.AddId == null || request.CardCode == "" && request.AddId == "")
-            {
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "El CardCode y el AddId no pueden ir vacíos" });
-            }
-
-            // Validar el parámetro Empresa
-            if (request.Empresa < 1 || request.Empresa > 4)
-            {
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "El valor de Empresa es inválido" });
-            }
-            Company company = sapService.SAPB1();
             try
             {
+                if (request.CardCode == null && request.AddId == null || request.CardCode == "" && request.AddId == "")
+                {
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "El CardCode y el AddId no pueden ir vacíos" });
+                }
+
+                // Validar el parámetro Empresa
+                if (request.Empresa < 1 || request.Empresa > 4)
+                {
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "El valor de Empresa es inválido" });
+                }
+
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 var configuration = new ConfigurationBuilder()
                .SetBasePath(Directory.GetCurrentDirectory())
                .AddJsonFile("appSettings.json")
@@ -162,18 +167,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListOCRD.Add(businessPartners ?? new OCRD());
                         recordsetBP.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListOCRD);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar el socio de negocios con los datos: " + JsonConvert.SerializeObject(request) });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar el socio de negocios con el CardCode: " + request.CardCode + " y AddId: " + request.AddId + " - " + ex.Message });
             }
         }
@@ -189,9 +191,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult CreatePartner(OCRD OCRD)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Crear una consulta SQL para obtener el CardCode más alto actualmente en uso
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 string query = "SELECT \r\n\t\t\t'C'+replicate('0',6-len(cast(cast(substring(max(cardcode),2 ,len(max(cardcode))) as int)+1 as nvarchar) )) \r\n\t\t\t+cast(cast(substring(max(cardcode),2 ,len(max(cardcode))) as int)+1 as nvarchar) as CardCode\r\n\t\tFROM ocrd WITH (NOLOCK)\r\n\t\tWHERE \r\n\t\t\tsubstring(CardCode,1,1) = 'C' \r\n\t\t\tand FrozenFor = 'N'";
@@ -242,18 +246,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                 if (result != 0)
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el socio de negocios: " + company.GetLastErrorDescription() });
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "El cliente fue creado correctamente.", Code = OCRD?.CardCode ?? "" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el socio de negocios: " + ex.Message });
             }
         }
@@ -269,7 +270,8 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult UpdatePartner(OCRD OCRD)
         {
-            Company company = sapService.SAPB1();
+            CompanyConnection companyConnection = sapService.SAPB1();
+            Company company = companyConnection.Company;
 
             // Obtener el objeto BusinessPartners de la API de DI
             BusinessPartners businessPartner = (BusinessPartners)company.GetBusinessObject(BoObjectTypes.oBusinessPartners);
@@ -322,22 +324,19 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                     if (updateResult != 0)
                     {
-                        sapService.SAPB1_DISCONNECT(company);
                         return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo actualizar el socio de negocios: " + company.GetLastErrorDescription() });
                     }
                 }
                 catch (Exception ex)
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo editar el socio de negocios - " + ex.Message });
                 }
             }
             else
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar el socio de negocios con el CardCode: " + OCRD?.CardCode ?? "" });
             }
-            sapService.SAPB1_DISCONNECT(company);
+
             return Ok(new MessageAPI() { Result = "OK", Message = "El CardCode: " + OCRD?.CardCode ?? "" + " fue actualizado correctamente." });
         }
 
@@ -354,7 +353,8 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult UpdateGroupNumPartner(List<RequestUpdateGroupNumPartner> OCRDList)
         {
-            Company company = sapService.SAPB1();
+            CompanyConnection companyConnection = sapService.SAPB1();
+            Company company = companyConnection.Company;
 
             List<MessageAPI> ListMessage = [];
 
@@ -382,7 +382,6 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     ListMessage.Add(new MessageAPI() { Result = "OK", Message = OCRD.CardCode + " - No se pudo encontrar el socio de negocios." });
                 }
             }
-            sapService.SAPB1_DISCONNECT(company);
             return Ok(ListMessage);
         }
 
@@ -397,10 +396,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult UpdatePartnerMassive(ListOCRDMassive OCRDList)
         {
-            Company company = sapService.SAPB1();
+            CompanyConnection companyConnection = sapService.SAPB1();
+            Company company = companyConnection.Company;
 
             List<MessageAPI> ListMessage = [];
-            
+
             foreach (OCRDMassive OCRD in OCRDList?.ListOCRD ?? [])
             {
                 // Obtener el objeto BusinessPartners de la API de DI
@@ -434,7 +434,6 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     ListMessage.Add(new MessageAPI() { Result = "OK", Message = OCRD.CardCode + " - No se pudo encontrar el socio de negocios." });
                 }
             }
-            sapService.SAPB1_DISCONNECT(company);
             return Ok(ListMessage);
         }
 
@@ -449,13 +448,16 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetBusinessPartnerMassive(RequestGetBusinessPartnerMassive request)
         {
-            if (request.InitialDate == null || request.FinalDate == null || request.InitialDate == "" || request.FinalDate == "")
-            {
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "Debe especificar la fecha inicial y fecha final" });
-            }
-            Company company = sapService.SAPB1();
             try
             {
+                if (request.InitialDate == null || request.FinalDate == null || request.InitialDate == "" || request.FinalDate == "")
+                {
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "Debe especificar la fecha inicial y fecha final" });
+                }
+
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Obtener el objeto BusinessPartners de la API de DI
                 Recordset recordsetBP = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordsetBP.DoQuery("SELECT CardCode, CardName, CardFName, groupCode, groupNum, Phone1, Cellular, E_Mail, AddID, VatIdUnCmp, CreditLine FROM OCRD WITH (NOLOCK) WHERE (CreateDate  between '" + request.InitialDate + "' and '" + request.FinalDate + "') or  (UpdateDate  between '" + request.InitialDate + "' and ' " + request.FinalDate + "')");
@@ -524,18 +526,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListOCRD.Add(businessPartners ?? new OCRD());
                         recordsetBP.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListOCRD);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "No se encontro ningun registro en el rango de fechas seleccionado" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar el listado de socio de negocios - " + ex.Message });
             }
         }

@@ -6,6 +6,7 @@ using ConexionesSQL;
 using ConexionesSQL.Models;
 using CanellaMovilBackend.Utils;
 using Newtonsoft.Json;
+using System;
 
 namespace CanellaMovilBackend.Filters.UserFilter
 {

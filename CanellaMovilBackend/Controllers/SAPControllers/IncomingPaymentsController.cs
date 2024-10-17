@@ -1,5 +1,7 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.IncomingPayments;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -17,8 +19,10 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class IncomingPaymentsController : ControllerBase
+
     {
 
         private readonly ISAPService sapService;
@@ -32,7 +36,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
             this.sapService = sapService;
         }
 
-
+       
         /// <summary>
         /// Crea pagos recibidos en SAP
         /// </summary>
@@ -44,9 +48,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult BulkCreatePayment(List<ORCT> ORCTList)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 List<MessageAPI> messageApi = [];
                 foreach (ORCT ORCT in ORCTList)
                 {
@@ -137,14 +143,18 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         messageApi.Add(new MessageAPI() { Result = "Fail", Message = errMsg, Code = string.Empty });
                     }
                 }
-                sapService.SAPB1_DISCONNECT(company);
                 return Ok(messageApi);
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el deposito - error: " + ex.Message });
             }
         }
+
+
+
+
+
     }
-}
+    }
+

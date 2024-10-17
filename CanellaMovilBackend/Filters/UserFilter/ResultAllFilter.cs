@@ -1,7 +1,12 @@
 ﻿using CanellaMovilBackend.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using CanellaMovilBackend.Service.UserService;
+using ConexionesSQL;
+using ConexionesSQL.Models;
 using CanellaMovilBackend.Utils;
+using Newtonsoft.Json;
+using System;
 
 namespace CanellaMovilBackend.Filters.UserFilter
 {
@@ -30,13 +35,9 @@ namespace CanellaMovilBackend.Filters.UserFilter
                     $"Role: {authenticationToken.Role}, " +
                     $"Action: {context.RouteData.Values["action"]}, " +
                     $"Controller: {context.RouteData.Values["controller"]}," +
-                    $"StatusCode: {context.HttpContext.Response.StatusCode}, " 
-                    //$"ResultObject: {JsonConvert.SerializeObject(context.Result)}"
-                );
+                    $"StatusCode: {context.HttpContext.Response.StatusCode}, " +
+                    $"ResultObject: {JsonConvert.SerializeObject(context.Result)}");
                 LogsAPI.Info("---------------");
-                //GC.Collect();
-                //GC.WaitForPendingFinalizers();
-                //GC.Collect();
             }
             catch (Exception ex)
             {

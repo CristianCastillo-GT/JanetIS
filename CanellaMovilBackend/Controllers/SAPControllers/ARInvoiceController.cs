@@ -1,6 +1,8 @@
 ﻿using CanellaMovilBackend.Filters.UserFilter;
+using CanellaMovilBackend.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Service.SAPService;
 using CanellaMovilBackend.Models;
 using SAPbobsCOM;
@@ -17,6 +19,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class ARInvoiceController : Controller
     {
@@ -42,9 +45,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetInvoiceBusinessPartner(RequestGetInvoice request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 // Obtener el objeto BusinessPartners de la API de DI
                 Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 recordset.DoQuery("SELECT TOP(100) DocNum, DocEntry, DocDate, Cardcode, CardName, NumAtCard, DocStatus FROM OINV WITH (NOLOCK) WHERE CardCode='" + request.CardCode + "' order by DocDate desc");
@@ -83,18 +88,15 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         ListOINV?.Add(new { invoice?.DocNum, invoice?.DocEntry, invoice?.CardCode, invoice?.CardName, invoice?.NumAtCard, invoice?.DocStatus, Items = invoice?.Items?.Select(x => new { x.DocEntry, x.ItemCode, x.Dscription, x.Quantity, x.LineTotal, x.Whscode }) });
                         recordset.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(ListOINV);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se encontro facturas relacionas con el CardCode: " + request.CardCode });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la cotización: DocNum = " + request.CardCode + " Error: " + ex.Message });
             }
         }

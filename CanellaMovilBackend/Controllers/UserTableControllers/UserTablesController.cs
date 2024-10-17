@@ -1,5 +1,6 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.UsersTables;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ namespace CanellaMovilBackend.Controllers.UserTableControllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Produces("application/json")]
-    [ServiceFilter(typeof(ResultAllFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     public class UserTablesController : Controller
     {
         private readonly ISAPService sapService;
@@ -41,9 +42,11 @@ namespace CanellaMovilBackend.Controllers.UserTableControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetCategoria(RequestGetCategoria request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.CodeDivision ??= "";
                 request.CodeTipo ??= "";
 
@@ -65,19 +68,16 @@ namespace CanellaMovilBackend.Controllers.UserTableControllers
                         List_Clas_Categoria.Add(categoria);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Clas_Categoria);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista de Categorias" });
                 }
 
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de categorias: " + ex.Message });
             }
         }
@@ -92,9 +92,10 @@ namespace CanellaMovilBackend.Controllers.UserTableControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetDivision( RequestGetDivision request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
                 request.CodeCategoria ??= "";
                 request.CodeTipo ??= "";
                 // Obtener el objeto division de la API de DI
@@ -115,18 +116,15 @@ namespace CanellaMovilBackend.Controllers.UserTableControllers
                         List_Clas_Division.Add(division);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Clas_Division);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista de Divisiones" });
                 }
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de divisiones: " + ex.Message });
             }
         }
@@ -141,9 +139,11 @@ namespace CanellaMovilBackend.Controllers.UserTableControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult GetTipo(RequestGetTipo request)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 request.CodeCategoria ??= "";
                 request.CodeDivision ??= "";
 
@@ -165,18 +165,16 @@ namespace CanellaMovilBackend.Controllers.UserTableControllers
                         List_Clas_Tipo.Add(tipo);
                         recordsetUT.MoveNext();
                     }
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(List_Clas_Tipo);
                 }
                 else
                 {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista de Divisiones" });
                 }
+
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de divisiones: " + ex.Message });
             }
         }

@@ -1,5 +1,7 @@
-﻿using CanellaMovilBackend.Filters.UserFilter;
+﻿using CanellaMovilBackend.Filters;
+using CanellaMovilBackend.Filters.UserFilter;
 using CanellaMovilBackend.Models;
+using CanellaMovilBackend.Models.CQMModels;
 using CanellaMovilBackend.Models.SAPModels.OutgoingPayments;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +18,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     [ApiController]
     [Produces("application/json")]
     [ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(SAPConnectionFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
     public class OutgoingPaymentsController : ControllerBase
     {
@@ -41,9 +44,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult CreatePayment(OVPM OVPM)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 Payments oVendorPayments = (Payments)company.GetBusinessObject(BoObjectTypes.oVendorPayments);
                 oVendorPayments.DocType = (OVPM.DocType == "A" ? BoRcptTypes.rAccount : (OVPM.DocType == "C" ? BoRcptTypes.rCustomer : (OVPM.DocType == "S" ? BoRcptTypes.rSupplier : throw new InvalidOperationException("El tipo de pago no es válido"))));
                 oVendorPayments.DocDate = DateTime.Parse(OVPM.DocDate);
@@ -95,19 +100,13 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 oVendorPayments.Add();
 
                 if (company.GetLastErrorDescription() == "")
-                {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Ok(new MessageAPI() { Result = "OK", Message = "Creado Correctamente." });
-                }
                 else
-                {
-                    sapService.SAPB1_DISCONNECT(company);
                     return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el registro - error: " + company.GetLastErrorDescription() });
-                }
+
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el deposito - error: " + ex.Message });
             }
         }
@@ -123,9 +122,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
         public ActionResult BulkCreatePayment(List<OVPM> OVPMList)
         {
-            Company company = sapService.SAPB1();
             try
             {
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
+
                 List<MessageAPI> messageApi = [];
                 foreach (OVPM OVPM in OVPMList)
                 {
@@ -210,12 +211,10 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         messageApi.Add(new MessageAPI() { Result = "Fail", Message = errMsg, Code = string.Empty });
                     }
                 }
-                sapService.SAPB1_DISCONNECT(company);
                 return Ok(messageApi);                
             }
             catch (Exception ex)
             {
-                sapService.SAPB1_DISCONNECT(company);
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el deposito - error: " + ex.Message });
             }
         }
