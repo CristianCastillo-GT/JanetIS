@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ConexionesSQL
-build_property.ProjectDir = C:\Users\infoagarcia\Downloads\Janet Final\janet\ConexionesSQL\
+build_property.ProjectDir = C:\Users\infoagarcia\Downloads\JANET_CDC\JanetIS\ConexionesSQL\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WebAPIs
-build_property.ProjectDir = C:\Users\infoagarcia\Downloads\Janet Final\janet\WebAPIs\
+build_property.ProjectDir = C:\Users\infoagarcia\Downloads\JANET_CDC\JanetIS\WebAPIs\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

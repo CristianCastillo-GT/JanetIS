@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0m6F6n9UzVhmC9OC1ERHKRUYa9CPFbJFE9vFLQCZJVD9KdIJ+COPgjd782rWt0vLtaYthYpfgmZifsHQnI/mTg==",
+  "dgSpecHash": "N2GcBkWMKN1+jdLFQamV7+d7Fw2tsS2HmFadm36DeKzUWtsaoROGjvHgDJnUS7llAP3JFM26B62hrq80ilmeLg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\infoagarcia\\Downloads\\Janet Final\\janet\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
+  "projectFilePath": "C:\\Users\\infoagarcia\\Downloads\\JANET_CDC\\JanetIS\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\infoagarcia\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.1\\microsoft.aspnetcore.authentication.jwtbearer.8.0.1.nupkg.sha512",
     "C:\\Users\\infoagarcia\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
