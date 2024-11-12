@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CanellaMovilBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cb1e91f09e97c4653d00a12064bae3cd61d3b077")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+183e53aef37279125bdc04fecea948a739ece7af")]
 [assembly: System.Reflection.AssemblyProductAttribute("CanellaMovilBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CanellaMovilBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

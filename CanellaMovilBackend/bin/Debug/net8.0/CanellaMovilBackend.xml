@@ -832,110 +832,221 @@
             <response code="200">Obtención de datos exitoso</response>
             <response code="409">Mensaje de error</response>
         </member>
-        <member name="T:CanellaMovilBackend.Filters.SAPConnectionFilter">
+        <member name="T:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.FacturasCobradorController">
             <summary>
-            Filtro de evaluación de conexión a SAP
-            </summary>
-        </member>
-        <member name="M:CanellaMovilBackend.Filters.SAPConnectionFilter.#ctor(CanellaMovilBackend.Service.SAPService.ISAPService)">
-            <summary>
-            Constructor
-            </summary>
-        </member>
-        <member name="M:CanellaMovilBackend.Filters.SAPConnectionFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
-            <summary>
-            Ejecución de la accion del filtro
-            </summary>
-        </member>
-        <member name="T:CanellaMovilBackend.Filters.UserFilter.BlockEndpointFilter">
-            <summary>
-            Filtro para bloquear Endpoints sin uso
-            </summary>
-        </member>
-        <member name="M:CanellaMovilBackend.Filters.UserFilter.BlockEndpointFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
-            <summary>
-            Ejecución de la accion del filtro
-            </summary>
-        </member>
-        <member name="T:CanellaMovilBackend.Filters.UserFilter.ResultAllFilter">
-            <summary>
-            Filtro por resultado
+            Controlador para el Reporte de facturas a entregar a Cobrador de stod
             </summary>
             <remarks>
             Constructor
             </remarks>
         </member>
-        <member name="M:CanellaMovilBackend.Filters.UserFilter.ResultAllFilter.#ctor(CanellaMovilBackend.Service.UserService.IUserService)">
+        <member name="M:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.FacturasCobradorController.#ctor">
             <summary>
-            Filtro por resultado
+            Controlador para el Reporte de facturas a entregar a Cobrador de stod
             </summary>
             <remarks>
             Constructor
             </remarks>
         </member>
-        <member name="M:CanellaMovilBackend.Filters.UserFilter.ResultAllFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)">
+        <member name="M:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.FacturasCobradorController.FacturaCreditoCanella(System.DateTime,System.String,System.String)">
             <summary>
-            Ejecución del resultado del filtro
+            Se obtienen las facturas para Entregar a Cobrador
+            </summary>
+            <param name="Fecha">Fecha</param>
+            <param name="Serie">Factura Serie (T = Todas)</param>
+            <param name="Cobrador">Cobrador (T = Todos)</param>
+            <returns>Retorna un listado de las ventas por gama</returns>
+            <response code="200">obtención de datos exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
+        <member name="M:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.FacturasCobradorController.FacturaCreditoVesa(System.DateTime,System.String)">
+            <summary>
+            Se obtienen las facturas para Entregar a Cobrador
+            </summary>
+            <param name="Fecha">Fecha</param>
+            <param name="Cobrador">Cobrador (T = Todos)</param>
+            <returns>Retorna un listado de las ventas por gama</returns>
+            <response code="200">obtención de datos exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
+        <member name="M:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.FacturasCobradorController.FacturaCreditoMaquipos(System.DateTime,System.String)">
+            <summary>
+            Se obtienen las facturas para Entregar a Cobrador
+            </summary>
+            <param name="Fecha">Fecha</param>
+            <param name="Cobrador">Cobrador (T = Todos)</param>
+            <returns>Retorna un listado de las ventas por gama</returns>
+            <response code="200">obtención de datos exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador">
+            <summary>
+            Obtener Facturas a Entregar a Cobrador
             </summary>
         </member>
-        <member name="T:CanellaMovilBackend.Filters.UserFilter.RoleFilter">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.DocEntry">
             <summary>
-            Filtro por rol
+            DocEntry
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Filters.UserFilter.RoleFilter.#ctor(CanellaMovilBackend.Service.UserService.IUserService)">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.DocNum">
             <summary>
-            Constructor
+            DocNum
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Filters.UserFilter.RoleFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.FacturaSerie">
             <summary>
-            Ejecución de la accion del filtro
+            FacturaSerie
             </summary>
         </member>
-        <member name="T:CanellaMovilBackend.Filters.UserFilter.STODFilter">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.FacturaNumero">
             <summary>
-            Filtro para comprobar usuario de STOD
+            FacturaNumero
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Filters.UserFilter.STODFilter.#ctor(CanellaMovilBackend.Service.UserService.IUserService)">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.FacturaFecha">
             <summary>
-            Constructor
+            FacturaFecha
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Filters.UserFilter.STODFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.ClienteCodigo">
             <summary>
-            Ejecución de la accion del filtro
+            ClienteCodigo
             </summary>
         </member>
-        <member name="T:CanellaMovilBackend.Middleware.RateLimitingMiddleware">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.ClienteNombre">
             <summary>
-            Middleware para controlar la tasa de conexiones.
+            ClienteNombre
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Middleware.RateLimitingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.FacturaTotal">
             <summary>
+            FacturaTotal
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Middleware.RateLimitingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.CobradorCodigo">
             <summary>
+            CobradorCodigo
             </summary>
         </member>
-        <member name="T:CanellaMovilBackend.Middleware.RateLimitEntry">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.CobradorNombre">
             <summary>
+            CobradorNombre
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Middleware.RateLimitEntry.RequestCount">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.Departamento">
             <summary>
+            Departamento
             </summary>
         </member>
-        <member name="T:CanellaMovilBackend.Middleware.RateLimitingMiddlewareExtensions">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.Estado">
             <summary>
-            
+            Estado
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Middleware.RateLimitingMiddlewareExtensions.UseRateLimitingMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.IND_Anulada">
             <summary>
+            IND_Anulada
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.F_Marcado">
+            <summary>
+            F_Marcado
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.Nota">
+            <summary>
+            Nota
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.Marcado_Usuario">
+            <summary>
+            Marcado_Usuario
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.SerieInterna">
+            <summary>
+            SerieInterna
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Reporte_Facturas_a_Entregar_a_Cobrador.Facturas_A_Cobrador.CorrelativoInt">
+            <summary>
+            CorrelativoInt
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos">
+            <summary>
+            Clase - Se obtienen los nuevos clientes del año actual y del mes actual, por metas
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos.Mes">
+            <summary>
+            Mes - Clientes del mes actual
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos.Anio">
+            <summary>
+            Anio - Clientes del año actual
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos.MetaMensual">
+            <summary>
+            MetaMensual - Meta de clientes mensual
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos.MetaAnual">
+            <summary>
+            MetaAnual - Meta de clientes anual
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas">
+            <summary>
+            Clase - Ventas hechas mensuales y anuales por gama y marca
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.Gama">
+            <summary>
+            Gama - Nombre de la gama del articulo hecha en la venta
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.TotalGama">
+            <summary>
+            TotalGama - Cantidad vendida de la gama ya sea mensual o anual
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.Litros">
+            <summary>
+            Litros - Cantidad vendida por litros
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.Unidades">
+            <summary>
+            Unidades - Cantidad vendida por unidades
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.Meta">
+            <summary>
+            Meta - Cantidad mensual o anual que debe hacer la gama.
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentasMesAnterior">
+            <summary>
+            Clase para obtener las ventas mensuales anterior al mes actual por marca
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentasMesAnterior.TotalGama">
+            <summary>
+            TotalGama - Cantidad vendida por marca
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentasMesAnterior.Litros">
+            <summary>
+            Litros - Cantidad vendida por litros
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentasMesAnterior.Unidades">
+            <summary>
+            Unidades - Cantidad vendida por unidades
             </summary>
         </member>
         <member name="T:CanellaMovilBackend.Models.ArchivosLaserFiche.DataArchivos">
@@ -4985,79 +5096,110 @@
             Cadena de articulos creados en los activos fijos
             </summary>
         </member>
-        <member name="T:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos">
+        <member name="T:CanellaMovilBackend.Filters.SAPConnectionFilter">
             <summary>
-            Clase - Se obtienen los nuevos clientes del año actual y del mes actual, por metas
+            Filtro de evaluación de conexión a SAP
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos.Mes">
+        <member name="M:CanellaMovilBackend.Filters.SAPConnectionFilter.#ctor(CanellaMovilBackend.Service.SAPService.ISAPService)">
             <summary>
-            Mes - Clientes del mes actual
+            Constructor
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos.Anio">
+        <member name="M:CanellaMovilBackend.Filters.SAPConnectionFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
             <summary>
-            Anio - Clientes del año actual
+            Ejecución de la accion del filtro
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos.MetaMensual">
+        <member name="T:CanellaMovilBackend.Filters.UserFilter.BlockEndpointFilter">
             <summary>
-            MetaMensual - Meta de clientes mensual
+            Filtro para bloquear Endpoints sin uso
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.ClientesNuevos.MetaAnual">
+        <member name="M:CanellaMovilBackend.Filters.UserFilter.BlockEndpointFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
             <summary>
-            MetaAnual - Meta de clientes anual
+            Ejecución de la accion del filtro
             </summary>
         </member>
-        <member name="T:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas">
+        <member name="T:CanellaMovilBackend.Filters.UserFilter.ResultAllFilter">
             <summary>
-            Clase - Ventas hechas mensuales y anuales por gama y marca
+            Filtro por resultado
+            </summary>
+            <remarks>
+            Constructor
+            </remarks>
+        </member>
+        <member name="M:CanellaMovilBackend.Filters.UserFilter.ResultAllFilter.#ctor(CanellaMovilBackend.Service.UserService.IUserService)">
+            <summary>
+            Filtro por resultado
+            </summary>
+            <remarks>
+            Constructor
+            </remarks>
+        </member>
+        <member name="M:CanellaMovilBackend.Filters.UserFilter.ResultAllFilter.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)">
+            <summary>
+            Ejecución del resultado del filtro
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.Gama">
+        <member name="T:CanellaMovilBackend.Filters.UserFilter.RoleFilter">
             <summary>
-            Gama - Nombre de la gama del articulo hecha en la venta
+            Filtro por rol
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.TotalGama">
+        <member name="M:CanellaMovilBackend.Filters.UserFilter.RoleFilter.#ctor(CanellaMovilBackend.Service.UserService.IUserService)">
             <summary>
-            TotalGama - Cantidad vendida de la gama ya sea mensual o anual
+            Constructor
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.Litros">
+        <member name="M:CanellaMovilBackend.Filters.UserFilter.RoleFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
             <summary>
-            Litros - Cantidad vendida por litros
+            Ejecución de la accion del filtro
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.Unidades">
+        <member name="T:CanellaMovilBackend.Filters.UserFilter.STODFilter">
             <summary>
-            Unidades - Cantidad vendida por unidades
+            Filtro para comprobar usuario de STOD
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentas.Meta">
+        <member name="M:CanellaMovilBackend.Filters.UserFilter.STODFilter.#ctor(CanellaMovilBackend.Service.UserService.IUserService)">
             <summary>
-            Meta - Cantidad mensual o anual que debe hacer la gama.
+            Constructor
             </summary>
         </member>
-        <member name="T:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentasMesAnterior">
+        <member name="M:CanellaMovilBackend.Filters.UserFilter.STODFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
             <summary>
-            Clase para obtener las ventas mensuales anterior al mes actual por marca
+            Ejecución de la accion del filtro
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentasMesAnterior.TotalGama">
+        <member name="T:CanellaMovilBackend.Middleware.RateLimitingMiddleware">
             <summary>
-            TotalGama - Cantidad vendida por marca
+            Middleware para controlar la tasa de conexiones.
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentasMesAnterior.Litros">
+        <member name="M:CanellaMovilBackend.Middleware.RateLimitingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Caching.Memory.IMemoryCache)">
             <summary>
-            Litros - Cantidad vendida por litros
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.STODModels.Dashboard.GamaVentasMesAnterior.Unidades">
+        <member name="M:CanellaMovilBackend.Middleware.RateLimitingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>
-            Unidades - Cantidad vendida por unidades
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Middleware.RateLimitEntry">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Middleware.RateLimitEntry.RequestCount">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Middleware.RateLimitingMiddlewareExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:CanellaMovilBackend.Middleware.RateLimitingMiddlewareExtensions.UseRateLimitingMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
             </summary>
         </member>
         <member name="T:CanellaMovilBackend.Service.SAPService.ISAPService">

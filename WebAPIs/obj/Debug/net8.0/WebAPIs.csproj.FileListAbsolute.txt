@@ -24,3 +24,16 @@ C:\Users\infoagarcia\Downloads\JANET_CDC\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPI
 C:\Users\infoagarcia\Downloads\JANET_CDC\JanetIS\WebAPIs\obj\Debug\net8.0\refint\WebAPIs.dll
 C:\Users\infoagarcia\Downloads\JANET_CDC\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.pdb
 C:\Users\infoagarcia\Downloads\JANET_CDC\JanetIS\WebAPIs\obj\Debug\net8.0\ref\WebAPIs.dll
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\bin\Debug\net8.0\WebAPIs.deps.json
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\bin\Debug\net8.0\WebAPIs.dll
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\bin\Debug\net8.0\WebAPIs.pdb
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.csproj.AssemblyReference.cache
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.AssemblyInfoInputs.cache
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.AssemblyInfo.cs
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.csproj.CoreCompileInputs.cache
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.sourcelink.json
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.dll
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\refint\WebAPIs.dll
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.pdb
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\JanetIS\WebAPIs\obj\Debug\net8.0\ref\WebAPIs.dll
