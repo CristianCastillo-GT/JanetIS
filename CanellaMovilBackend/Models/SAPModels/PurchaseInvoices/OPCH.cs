@@ -17,7 +17,7 @@ namespace CanellaMovilBackend.Models.SAPModels.PurchaseInvoices
         /// <summary>
         /// Código de la Entrada de Mercancías
         /// </summary>
-        public int ReceiptEntry { get; set; }
+        public int docEntry { get; set; }
 
         /// <summary>
         /// Número de Serie de la Factura

@@ -54,7 +54,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 oVendorPayments.DocDate = DateTime.Parse(OVPM.DocDate);
                 oVendorPayments.DueDate = DateTime.Parse(OVPM.DocDueDate);
                 oVendorPayments.TaxDate = DateTime.Parse(OVPM.TaxDate);
-                if (!string.IsNullOrWhiteSpace(OVPM.CardCode) && !string.IsNullOrEmpty(OVPM.CardCode)) 
+                if (!string.IsNullOrWhiteSpace(OVPM.CardCode) && !string.IsNullOrEmpty(OVPM.CardCode))
                 {
                     oVendorPayments.CardCode = OVPM.CardCode;
                 }
@@ -66,21 +66,26 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 oVendorPayments.DocRate = double.Parse(OVPM.DocRate);
                 oVendorPayments.Remarks = OVPM.Comments;
                 oVendorPayments.ControlAccount = OVPM.BpAct;
+
+                
                 oVendorPayments.CashAccount = OVPM.CashAcct;
                 oVendorPayments.CheckAccount = OVPM.CheckAccount;
                 oVendorPayments.TransferAccount = OVPM.TransferAccount;
                 oVendorPayments.CashSum = 0;
                 oVendorPayments.TransferSum = 0;
 
+
                 oVendorPayments.UserFields.Fields.Item("U_OCDocNum").Value = OVPM.U_OCDocNum;
                 oVendorPayments.UserFields.Fields.Item("U_TipoPagos").Value = OVPM.U_TipoPagos;
-                oVendorPayments.UserFields.Fields.Item("U_PagoVerificado").Value = "S";
+                oVendorPayments.UserFields.Fields.Item("U_PagoVerificado").Value = "S";     //Se debe de consultar este parametros
                 oVendorPayments.UserFields.Fields.Item("U_TipoPago").Value = OVPM.U_TipoPago;
-                oVendorPayments.UserFields.Fields.Item("U_AplicaRetencion").Value = "SI";
+                oVendorPayments.UserFields.Fields.Item("U_AplicaRetencion").Value = "SI";   //Se debe de consultar este parametros
 
-                foreach (PaymentMethod pay in OVPM.PaymentMethod ?? [] ) 
+
+                //Verifica si el tipo es transferencia es cheque o transferencia
+                foreach (PaymentMethod pay in OVPM.PaymentMethod ?? [])
                 {
-                    if (pay.Type == "CH") 
+                    if (pay.Type == "CH")
                     {
                         oVendorPayments.Checks.CheckSum = double.Parse(pay.Sum);
                         oVendorPayments.Checks.CheckNumber = Convert.ToInt32(pay.ReferenceNumber);
@@ -97,7 +102,9 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     }
                 }
 
+                //Se inserta el dato
                 oVendorPayments.Add();
+
 
                 if (company.GetLastErrorDescription() == "")
                     return Ok(new MessageAPI() { Result = "OK", Message = "Creado Correctamente." });

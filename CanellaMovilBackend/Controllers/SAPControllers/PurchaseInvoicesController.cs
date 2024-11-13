@@ -58,7 +58,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 Documents oGoodsReceipt = (Documents)company.GetBusinessObject(BoObjectTypes.oPurchaseDeliveryNotes);
 
                 // Verificar si la Entrada de Mercancías existe
-                if (!oGoodsReceipt.GetByKey(OPCH.ReceiptEntry))
+                if (!oGoodsReceipt.GetByKey(OPCH.docEntry))
                 {
                     return Conflict(new { Result = "Fail", Message = "La Entrada de Mercancías no existe." });
                 }
@@ -107,7 +107,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 {
                     oGoodsReceipt.Lines.SetCurrentLine(i);
                     oPurchaseInvoice.Lines.BaseType = (int)BoObjectTypes.oPurchaseDeliveryNotes;
-                    oPurchaseInvoice.Lines.BaseEntry = OPCH.ReceiptEntry;
+                    oPurchaseInvoice.Lines.BaseEntry = OPCH.docEntry;
                     oPurchaseInvoice.Lines.BaseLine = oGoodsReceipt.Lines.LineNum;
 
                     // Iguala propiedades básicas
@@ -217,13 +217,17 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                             {
                                 oPurchaseInvoice.WithholdingTaxData.WTAmount = Math.Min(Math.Round(totalFactura * 0.05, 2), totalFactura);
                                 Verificador_ISR = "ISR5";
-                            }//Verificar
+                            }//Verificar IVA
                             else if ((oPurchaseInvoice.WithholdingTaxData.WTCode == "IVA" || oPurchaseInvoice.WithholdingTaxData.WTCode == "IVA5") && totalFactura < 2500.00)
                             {
                                 oPurchaseInvoice.WithholdingTaxData.WTAmount = 0.00;
+                            }//Verificar ISR
+                            else if (oPurchaseInvoice.WithholdingTaxData.WTCode == "ISR5" && totalFactura < 2500.00)
+                            {
+                                oPurchaseInvoice.WithholdingTaxData.WTAmount = 0.00; 
                             }
-                            
-                            totalRetencion += oPurchaseInvoice.WithholdingTaxData.WTAmount;
+
+                    totalRetencion += oPurchaseInvoice.WithholdingTaxData.WTAmount;
                         }
 
 

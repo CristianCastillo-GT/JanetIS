@@ -3369,7 +3369,7 @@
             Objeto de Factura Proveedores
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.SAPModels.PurchaseInvoices.OPCH.ReceiptEntry">
+        <member name="P:CanellaMovilBackend.Models.SAPModels.PurchaseInvoices.OPCH.docEntry">
             <summary>
             Código de la Entrada de Mercancías
             </summary>
