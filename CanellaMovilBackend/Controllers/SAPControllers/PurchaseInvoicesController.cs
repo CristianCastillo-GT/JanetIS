@@ -120,23 +120,23 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     oPurchaseInvoice.Lines.VatGroup = oGoodsReceipt.Lines.VatGroup;
                     oPurchaseInvoice.Lines.UserFields.Fields.Item("U_Tipo").Value = oGoodsReceipt.Lines.UserFields.Fields.Item("U_Tipo").Value;
 
-
+                    
                     // Calcula el monto para cada articulo sin impuestos
-                    double PrecioArticulo = Math.Round(oPurchaseInvoice.Lines.Price * oPurchaseInvoice.Lines.Quantity, 2);
+                    double PrecioArticulo = oPurchaseInvoice.Lines.Price * oPurchaseInvoice.Lines.Quantity;
                     //Total Sin impuestos
                     totalFactura += PrecioArticulo;
 
                     // Calcula los impuestos de cada articulo
                     double tasaImpuesto = GetTaxRateForCode(company, oPurchaseInvoice.Lines.TaxCode);
-                    double impuestoLinea = Math.Round(PrecioArticulo * (tasaImpuesto / 100), 2);
+                    double impuestoLinea = PrecioArticulo * (tasaImpuesto / 100);
                     //Total de impuestos
                     totalImpuestos += impuestoLinea;
 
                     oPurchaseInvoice.Lines.Add();
                 }
 
-                //Se agrega automaticamente
-                //oPurchaseInvoice.UserFields.Fields.Item("U_DoctoTotal").Value = totalFactura;
+                totalImpuestos = Math.Round(totalImpuestos,2);
+                totalFactura = Math.Round(totalFactura, 2);
 
                 double totalRetencion = 0.0;
                 // Obtener el objeto del proveedor
@@ -230,6 +230,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     totalRetencion += oPurchaseInvoice.WithholdingTaxData.WTAmount;
                         }
 
+                totalRetencion = Math.Round(totalRetencion, 2);
 
                 if (Verificador_IVA == "IVA" && Verificador_ISR == "7ISR")
                 {
@@ -276,7 +277,10 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
 
                 //Para verificar total final con los cálculos respectivos
-                totalDocumentoFinal = totalFactura + totalImpuestos - totalRetencion;
+                totalDocumentoFinal = Math.Round(totalFactura + totalImpuestos - totalRetencion,2);
+
+
+                // oPurchaseInvoice.UserFields.Fields.Item("u_doctototal").Value = totalDocumentoFinal;
                 oPurchaseInvoice.UserFields.Fields.Item("U_DoctoRef").Value = "00005";
 
                 // Se inserta la factura a SAP
