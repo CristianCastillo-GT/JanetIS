@@ -11,3 +11,16 @@ C:\Users\infoagarcia\Downloads\Janet Final\janet\WebAPIs\obj\Debug\net8.0\WebAPI
 C:\Users\infoagarcia\Downloads\Janet Final\janet\WebAPIs\obj\Debug\net8.0\refint\WebAPIs.dll
 C:\Users\infoagarcia\Downloads\Janet Final\janet\WebAPIs\obj\Debug\net8.0\WebAPIs.pdb
 C:\Users\infoagarcia\Downloads\Janet Final\janet\WebAPIs\obj\Debug\net8.0\ref\WebAPIs.dll
+C:\Repos\janet\06112024\JanetIS\WebAPIs\bin\Debug\net8.0\WebAPIs.deps.json
+C:\Repos\janet\06112024\JanetIS\WebAPIs\bin\Debug\net8.0\WebAPIs.dll
+C:\Repos\janet\06112024\JanetIS\WebAPIs\bin\Debug\net8.0\WebAPIs.pdb
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.csproj.AssemblyReference.cache
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.GeneratedMSBuildEditorConfig.editorconfig
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.AssemblyInfoInputs.cache
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.AssemblyInfo.cs
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.csproj.CoreCompileInputs.cache
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.sourcelink.json
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.dll
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\refint\WebAPIs.dll
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\WebAPIs.pdb
+C:\Repos\janet\06112024\JanetIS\WebAPIs\obj\Debug\net8.0\ref\WebAPIs.dll

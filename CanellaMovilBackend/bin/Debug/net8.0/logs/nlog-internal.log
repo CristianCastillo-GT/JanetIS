@@ -14,3 +14,59 @@
 2024-10-15 11:53:17.2198 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.8.2366. Product version: 5.2.8+f586f1341c46fa38aaaff4c641e7f0fa7e813943. GlobalAssemblyCache: False
 2024-10-15 11:53:17.2198 Info Validating config: TargetNames=f, allfile, ownFile-web, ConfigItems=66, FilePath=C:\Users\infoagarcia\Downloads\Janet Final\janet\CanellaMovilBackend\bin\Debug\net8.0\NLog.config
 2024-10-15 11:53:17.2198 Info Configuration initialized.
+2024-11-07 10:35:12.2838 Info Loading assembly name: NLog.Web.AspNetCore
+2024-11-07 10:35:12.3131 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.8.1035. Product version: 5.3.8+0c5db2371c65c25905734b0335fd0c593ee61ad6. GlobalAssemblyCache: False
+2024-11-07 10:35:12.3566 Info Registered target NLog.Targets.FileTarget(Name=f)
+2024-11-07 10:35:12.3566 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2024-11-07 10:35:12.3566 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2024-11-07 10:35:12.3566 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.8.2366. Product version: 5.2.8+f586f1341c46fa38aaaff4c641e7f0fa7e813943. GlobalAssemblyCache: False
+2024-11-07 10:35:12.3751 Info Validating config: TargetNames=f, allfile, ownFile-web, ConfigItems=66, FilePath=C:\Repos\janet\06112024\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\NLog.config
+2024-11-07 10:35:12.3751 Info Configuration initialized.
+2024-11-07 10:55:47.2139 Info Loading assembly name: NLog.Web.AspNetCore
+2024-11-07 10:55:47.2387 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.8.1035. Product version: 5.3.8+0c5db2371c65c25905734b0335fd0c593ee61ad6. GlobalAssemblyCache: False
+2024-11-07 10:55:47.2839 Info Registered target NLog.Targets.FileTarget(Name=f)
+2024-11-07 10:55:47.2839 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2024-11-07 10:55:47.2839 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2024-11-07 10:55:47.2997 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.8.2366. Product version: 5.2.8+f586f1341c46fa38aaaff4c641e7f0fa7e813943. GlobalAssemblyCache: False
+2024-11-07 10:55:47.3096 Info Validating config: TargetNames=f, allfile, ownFile-web, ConfigItems=66, FilePath=C:\Repos\janet\06112024\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\NLog.config
+2024-11-07 10:55:47.3096 Info Configuration initialized.
+2024-11-07 17:53:38.2338 Info Loading assembly name: NLog.Web.AspNetCore
+2024-11-07 17:53:38.3156 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.8.1035. Product version: 5.3.8+0c5db2371c65c25905734b0335fd0c593ee61ad6. GlobalAssemblyCache: False
+2024-11-07 17:53:38.4911 Info Registered target NLog.Targets.FileTarget(Name=f)
+2024-11-07 17:53:38.4911 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2024-11-07 17:53:38.4911 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2024-11-07 17:53:38.5142 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.8.2366. Product version: 5.2.8+f586f1341c46fa38aaaff4c641e7f0fa7e813943. GlobalAssemblyCache: False
+2024-11-07 17:53:38.5406 Info Validating config: TargetNames=f, allfile, ownFile-web, ConfigItems=66, FilePath=C:\Repos\janet\06112024\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\NLog.config
+2024-11-07 17:53:38.5730 Info Configuration initialized.
+2024-11-15 16:20:03.0554 Info Loading assembly name: NLog.Web.AspNetCore
+2024-11-15 16:20:03.0895 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.8.1035. Product version: 5.3.8+0c5db2371c65c25905734b0335fd0c593ee61ad6. GlobalAssemblyCache: False
+2024-11-15 16:20:03.1423 Info Registered target NLog.Targets.FileTarget(Name=f)
+2024-11-15 16:20:03.1423 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2024-11-15 16:20:03.1423 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2024-11-15 16:20:03.1423 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.8.2366. Product version: 5.2.8+f586f1341c46fa38aaaff4c641e7f0fa7e813943. GlobalAssemblyCache: False
+2024-11-15 16:20:03.1616 Info Validating config: TargetNames=f, allfile, ownFile-web, ConfigItems=66, FilePath=C:\Repos\janet\06112024\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\NLog.config
+2024-11-15 16:20:03.1729 Info Configuration initialized.
+2024-11-15 16:25:18.6470 Info Loading assembly name: NLog.Web.AspNetCore
+2024-11-15 16:25:18.7088 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.8.1035. Product version: 5.3.8+0c5db2371c65c25905734b0335fd0c593ee61ad6. GlobalAssemblyCache: False
+2024-11-15 16:25:18.8292 Info Registered target NLog.Targets.FileTarget(Name=f)
+2024-11-15 16:25:18.8292 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2024-11-15 16:25:18.8430 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2024-11-15 16:25:18.8430 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.8.2366. Product version: 5.2.8+f586f1341c46fa38aaaff4c641e7f0fa7e813943. GlobalAssemblyCache: False
+2024-11-15 16:25:18.8765 Info Validating config: TargetNames=f, allfile, ownFile-web, ConfigItems=66, FilePath=C:\Repos\janet\06112024\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\NLog.config
+2024-11-15 16:25:18.9070 Info Configuration initialized.
+2024-11-15 16:30:12.6751 Info Loading assembly name: NLog.Web.AspNetCore
+2024-11-15 16:30:12.7128 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.8.1035. Product version: 5.3.8+0c5db2371c65c25905734b0335fd0c593ee61ad6. GlobalAssemblyCache: False
+2024-11-15 16:30:12.7761 Info Registered target NLog.Targets.FileTarget(Name=f)
+2024-11-15 16:30:12.7761 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2024-11-15 16:30:12.7761 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2024-11-15 16:30:12.7761 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.8.2366. Product version: 5.2.8+f586f1341c46fa38aaaff4c641e7f0fa7e813943. GlobalAssemblyCache: False
+2024-11-15 16:30:12.7974 Info Validating config: TargetNames=f, allfile, ownFile-web, ConfigItems=66, FilePath=C:\Repos\janet\06112024\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\NLog.config
+2024-11-15 16:30:12.8106 Info Configuration initialized.
+2024-11-15 16:58:52.7101 Info Loading assembly name: NLog.Web.AspNetCore
+2024-11-15 16:58:52.7433 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.8.1035. Product version: 5.3.8+0c5db2371c65c25905734b0335fd0c593ee61ad6. GlobalAssemblyCache: False
+2024-11-15 16:58:52.7932 Info Registered target NLog.Targets.FileTarget(Name=f)
+2024-11-15 16:58:52.7932 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2024-11-15 16:58:52.7932 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2024-11-15 16:58:52.8064 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.8.2366. Product version: 5.2.8+f586f1341c46fa38aaaff4c641e7f0fa7e813943. GlobalAssemblyCache: False
+2024-11-15 16:58:52.8064 Info Validating config: TargetNames=f, allfile, ownFile-web, ConfigItems=66, FilePath=C:\Repos\janet\06112024\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\NLog.config
+2024-11-15 16:58:52.8255 Info Configuration initialized.

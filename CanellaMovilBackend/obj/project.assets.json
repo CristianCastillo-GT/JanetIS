@@ -2300,23 +2300,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\infoagarcia\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\infodcastillo\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\infoagarcia\\Downloads\\Janet Final\\janet\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
+      "projectUniqueName": "C:\\Repos\\janet\\06112024\\JanetIS\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
       "projectName": "CanellaMovilBackend",
-      "projectPath": "C:\\Users\\infoagarcia\\Downloads\\Janet Final\\janet\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
-      "packagesPath": "C:\\Users\\infoagarcia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\infoagarcia\\Downloads\\Janet Final\\janet\\CanellaMovilBackend\\obj\\",
+      "projectPath": "C:\\Repos\\janet\\06112024\\JanetIS\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
+      "packagesPath": "C:\\Users\\infodcastillo\\.nuget\\packages\\",
+      "outputPath": "C:\\Repos\\janet\\06112024\\JanetIS\\CanellaMovilBackend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\infoagarcia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\infodcastillo\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -2325,17 +2327,18 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\infoagarcia\\Downloads\\Janet Final\\janet\\ConexionesSQL\\ConexionesSQL.csproj": {
-              "projectPath": "C:\\Users\\infoagarcia\\Downloads\\Janet Final\\janet\\ConexionesSQL\\ConexionesSQL.csproj"
+            "C:\\Repos\\janet\\06112024\\JanetIS\\ConexionesSQL\\ConexionesSQL.csproj": {
+              "projectPath": "C:\\Repos\\janet\\06112024\\JanetIS\\ConexionesSQL\\ConexionesSQL.csproj"
             },
-            "C:\\Users\\infoagarcia\\Downloads\\Janet Final\\janet\\WebAPIs\\WebAPIs.csproj": {
-              "projectPath": "C:\\Users\\infoagarcia\\Downloads\\Janet Final\\janet\\WebAPIs\\WebAPIs.csproj"
+            "C:\\Repos\\janet\\06112024\\JanetIS\\WebAPIs\\WebAPIs.csproj": {
+              "projectPath": "C:\\Repos\\janet\\06112024\\JanetIS\\WebAPIs\\WebAPIs.csproj"
             }
           }
         }
@@ -2344,11 +2347,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2411,7 +2409,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
