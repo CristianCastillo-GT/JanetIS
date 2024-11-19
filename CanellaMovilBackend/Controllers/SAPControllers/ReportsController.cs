@@ -39,7 +39,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
             try
             {
                 string connectionString;
-                string storedProcedure;
+                string storedProcedure; 
 
                 var configuration = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
