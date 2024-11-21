@@ -88,6 +88,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     oIncomingPayments.UserFields.Fields.Item("U_TipoPagos").Value = ORCT.U_TipoPagos;
                     oIncomingPayments.UserFields.Fields.Item("U_PagoVerificado").Value = "N";
                     oIncomingPayments.UserFields.Fields.Item("U_TipoPago").Value = ORCT.U_TipoPago;
+                    oIncomingPayments.UserFields.Fields.Item("U_Cobrador").Value = ORCT.U_Cobrador;
                     oIncomingPayments.UserFields.Fields.Item("U_AplicaRetencion").Value = "NO";
 
 
@@ -121,6 +122,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                             oIncomingPayments.TransferReference = pay.ReferenceNumber;
 
                         }
+
+                        if (pay.Type == "EF")  // Si es un pago en efectivo
+                        {
+                            oIncomingPayments.CashSum += double.Parse(pay.Sum);  // Agregar el monto al campo CashSum
+                        }
                     }
 
                     if (oIncomingPayments.Add() == 0)
@@ -152,9 +158,6 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         }
 
 
-
-
-
     }
-    }
+}
 

@@ -134,10 +134,16 @@ namespace CanellaMovilBackend.Models.SAPModels.IncomingPayments
         /// Comentario / Comentarios
         /// </summary>
         public string? JrnlMemo { get; set; } = string.Empty;
+
         /// <summary>
         /// Vendedor
         /// </summary>
         public int U_EmpCode { get; set; }
+
+        /// <summary>
+        /// Vendedor
+        /// </summary>
+        public int U_Cobrador { get; set; }
 
         /// <summary>
         /// VoucherList / Listado de direcciones
