@@ -50,3 +50,16 @@ C:\Users\infoagarcia\Downloads\JANET88\JanetIS\ConexionesSQL\obj\Debug\net8.0\Co
 C:\Users\infoagarcia\Downloads\JANET88\JanetIS\ConexionesSQL\obj\Debug\net8.0\refint\ConexionesSQL.dll
 C:\Users\infoagarcia\Downloads\JANET88\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.pdb
 C:\Users\infoagarcia\Downloads\JANET88\JanetIS\ConexionesSQL\obj\Debug\net8.0\ref\ConexionesSQL.dll
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\bin\Debug\net8.0\ConexionesSQL.deps.json
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\bin\Debug\net8.0\ConexionesSQL.dll
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\bin\Debug\net8.0\ConexionesSQL.pdb
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.csproj.AssemblyReference.cache
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.AssemblyInfoInputs.cache
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.AssemblyInfo.cs
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.csproj.CoreCompileInputs.cache
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.sourcelink.json
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.dll
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\refint\ConexionesSQL.dll
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ConexionesSQL.pdb
+C:\Users\infogaperez\Desktop\JANET 2.0\JanetIS\ConexionesSQL\obj\Debug\net8.0\ref\ConexionesSQL.dll

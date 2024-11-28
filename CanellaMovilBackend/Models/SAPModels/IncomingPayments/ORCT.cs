@@ -143,7 +143,7 @@ namespace CanellaMovilBackend.Models.SAPModels.IncomingPayments
         /// <summary>
         /// Vendedor
         /// </summary>
-        public int U_Cobrador { get; set; }
+        public string U_Cobrador { get; set; }
 
         /// <summary>
         /// VoucherList / Listado de direcciones

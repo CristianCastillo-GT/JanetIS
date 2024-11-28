@@ -88,7 +88,6 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     oIncomingPayments.UserFields.Fields.Item("U_TipoPagos").Value = ORCT.U_TipoPagos;
                     oIncomingPayments.UserFields.Fields.Item("U_PagoVerificado").Value = "N";
                     oIncomingPayments.UserFields.Fields.Item("U_TipoPago").Value = ORCT.U_TipoPago;
-                    oIncomingPayments.UserFields.Fields.Item("U_Cobrador").Value = ORCT.U_Cobrador;
                     oIncomingPayments.UserFields.Fields.Item("U_AplicaRetencion").Value = "NO";
 
 
@@ -157,7 +156,116 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
             }
         }
 
+        /// <summary>
+        /// Crea un pago Individual efectuado en SAP
+        /// </summary>
+        /// <returns>Codigos de respuesta</returns>
+        /// <response code="200">Creación exitosa</response>
+        /// <response code="409">Mensaje de error</response>
+        [HttpPost]
+        [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
+        public ActionResult CreateSinglePayment(ORCT ORCT)
+        {
+            try
+            {
+                // Establecer la conexión con SAP
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
 
+                // Verificar que la conexión se haya establecido correctamente
+                if (company == null || !company.Connected)
+                {
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "Error de conexión a SAP. La conexión no se pudo establecer.", Code = string.Empty });
+                }
+
+
+                // Crear el objeto de pago
+                Payments oIncomingPayments = (Payments)company.GetBusinessObject(BoObjectTypes.oIncomingPayments);
+
+                // Asignar valores al objeto de pago
+                oIncomingPayments.DocType = (ORCT.DocType == "A" ? BoRcptTypes.rAccount :
+                                            (ORCT.DocType == "C" ? BoRcptTypes.rCustomer :
+                                            (ORCT.DocType == "S" ? BoRcptTypes.rSupplier :
+                                            throw new InvalidOperationException("El tipo de pago no es válido"))));
+                oIncomingPayments.DocDate = DateTime.Parse(ORCT.DocDate);
+                oIncomingPayments.DueDate = DateTime.Parse(ORCT.DocDueDate);
+                oIncomingPayments.TaxDate = DateTime.Parse(ORCT.TaxDate);
+
+                // Asignación de datos de cliente o proveedor
+                if (!string.IsNullOrWhiteSpace(ORCT.CardCode) && !string.IsNullOrEmpty(ORCT.CardCode))
+                {
+                    oIncomingPayments.CardCode = ORCT.CardCode;
+                }
+                else
+                {
+                    oIncomingPayments.CardName = ORCT.CardName;
+                }
+
+                oIncomingPayments.DocCurrency = ORCT.DocCurr;
+                oIncomingPayments.DocRate = double.Parse(ORCT.DocRate);
+                oIncomingPayments.Remarks = ORCT.Comments;
+                oIncomingPayments.ControlAccount = ORCT.BpAct;
+                oIncomingPayments.CashAccount = ORCT.CashAcct;
+                oIncomingPayments.CheckAccount = ORCT.CheckAccount;
+                oIncomingPayments.TransferAccount = ORCT.TransferAccount;
+                oIncomingPayments.CashSum = 0;
+                oIncomingPayments.CounterReference = ORCT.CounterRef;
+                oIncomingPayments.Reference1 = ORCT.Ref1;
+                oIncomingPayments.JournalRemarks = ORCT.JrnlMemo;
+                oIncomingPayments.TransferSum = 0;
+                oIncomingPayments.Series = 244;
+
+                // Campos personalizados
+                oIncomingPayments.UserFields.Fields.Item("U_OCDocNum").Value = ORCT.U_OCDocNum;
+                oIncomingPayments.UserFields.Fields.Item("U_TipoPagos").Value = ORCT.U_TipoPagos;
+                oIncomingPayments.UserFields.Fields.Item("U_PagoVerificado").Value = "N";
+                oIncomingPayments.UserFields.Fields.Item("U_TipoPago").Value = ORCT.U_TipoPago;
+                oIncomingPayments.UserFields.Fields.Item("U_Cobrador").Value = ORCT.U_Cobrador;
+                oIncomingPayments.UserFields.Fields.Item("U_AplicaRetencion").Value = "NO";
+                oIncomingPayments.UserFields.Fields.Item("U_DpsBoleta").Value = ORCT.U_DpsBoleta;
+                oIncomingPayments.UserFields.Fields.Item("U_BcoDpsBoleta").Value = ORCT.U_BcoDpsBoleta;
+
+
+                // Agregar métodos de pago (EF, CH, TR)
+                foreach (IncomingPaymentMethod pay in ORCT.IncomingPaymentMethod ?? new List<IncomingPaymentMethod>())
+                {
+                    if (pay.Type == "CH") // Pago con cheque
+                    {
+                        oIncomingPayments.Checks.CheckSum = double.Parse(pay.Sum);
+                        oIncomingPayments.Checks.CheckNumber = Convert.ToInt32(pay.ReferenceNumber);
+                        oIncomingPayments.Checks.CountryCode = pay.CountryCode;
+                        oIncomingPayments.Checks.BankCode = pay.BankCode;
+                        oIncomingPayments.Checks.Add();
+                    }
+
+                    if (pay.Type == "TR") // Pago por transferencia
+                    {
+                        oIncomingPayments.TransferSum += double.Parse(pay.Sum);
+                        oIncomingPayments.TransferDate = DateTime.Parse(pay.Date);
+                        oIncomingPayments.TransferReference = pay.ReferenceNumber;
+                    }
+
+                    if (pay.Type == "EF") // Pago en efectivo
+                    {
+                        oIncomingPayments.CashSum += double.Parse(pay.Sum); // Agregar el monto al campo CashSum
+                    }
+                }
+
+                // Crear el pago en SAP
+                oIncomingPayments.Add(); // Si el pago se crea exitosamente
+                if (company.GetLastErrorDescription() == "")
+                    return Ok(new MessageAPI() { Result = "OK", Message = "Creado Correctamente." });
+                else
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el registro - error: " + company.GetLastErrorDescription() });
+
+            }
+            catch (Exception ex)
+            {
+                return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el deposito - error: " + ex.Message });
+            }
+
+        }
     }
 }
 

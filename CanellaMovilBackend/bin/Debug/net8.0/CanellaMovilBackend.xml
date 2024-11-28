@@ -371,6 +371,14 @@
             <response code="200">Creación exitosa</response>
             <response code="409">Mensaje de error</response>
         </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.IncomingPaymentsController.CreateSinglePayment(CanellaMovilBackend.Models.SAPModels.IncomingPayments.ORCT)">
+            <summary>
+            Crea un pago Individual efectuado en SAP
+            </summary>
+            <returns>Codigos de respuesta</returns>
+            <response code="200">Creación exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
         <member name="T:CanellaMovilBackend.Controllers.SAPControllers.IncomingPaymentsCTController">
             <summary>
              Controladore Pagos Recibidos CT
@@ -2390,6 +2398,11 @@
             </summary>
         </member>
         <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.ORCT.U_EmpCode">
+            <summary>
+            Vendedor
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.ORCT.U_Cobrador">
             <summary>
             Vendedor
             </summary>

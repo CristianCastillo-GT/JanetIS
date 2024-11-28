@@ -262,7 +262,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                             }
                             else if ( oPurchaseInvoice.WithholdingTaxData.WTCode == "7ISR" && totalFactura > 30000.00)
                             {
-                                oPurchaseInvoice.WithholdingTaxData.WTAmount = Math.Min(Math.Round(totalFactura * 0.07, 2), totalFactura);
+                                oPurchaseInvoice.WithholdingTaxData.WTAmount = Math.Min(Math.Round(((totalFactura - 30000) * 0.07) + 1500, 2), totalFactura);
                                 Verificador_ISR = "7ISR";
                             }
                             else if (oPurchaseInvoice.WithholdingTaxData.WTCode == "ISR5" && totalFactura > 30000.00)
