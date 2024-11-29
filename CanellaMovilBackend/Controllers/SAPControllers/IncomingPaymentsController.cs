@@ -252,17 +252,34 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     }
                 }
 
-                // Crear el pago en SAP
-                oIncomingPayments.Add(); // Si el pago se crea exitosamente
-                if (company.GetLastErrorDescription() == "")
-                    return Ok(new MessageAPI() { Result = "OK", Message = "Creado Correctamente." });
-                else
-                    return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el registro - error: " + company.GetLastErrorDescription() });
+                // Intentar crear el pago en SAP
+                if (oIncomingPayments.Add() == 0)
+                {
+                    // Obtener el docEntry del pago creado
+                    var docEntry = company.GetNewObjectKey();
+                    Payments PagoCreado = (Payments)company.GetBusinessObject(BoObjectTypes.oIncomingPayments);
 
+                    // Validar si el pago fue creado correctamente
+                    _ = int.TryParse(docEntry, out int docEntry2);
+                    if (PagoCreado.GetByKey(docEntry2))
+                    {
+                        return Ok(new MessageAPI() { Result = "OK", Message = "Creado Correctamente.", Code = PagoCreado.DocNum.ToString(), CodeNum = PagoCreado.CounterReference.ToString() });
+                    }
+                    else
+                    {
+                        return Conflict(new MessageAPI() { Result = "Fail", Message = "No se terminó el proceso correctamente", Code = string.Empty });
+                    }
+                }
+                else
+                {
+                    company.GetLastError(out int errCode, out string errMsg);
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = errMsg, Code = string.Empty });
+                }
             }
             catch (Exception ex)
             {
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el deposito - error: " + ex.Message });
+                // Manejo de excepciones generales
+                return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo crear el depósito - error: " + ex.Message });
             }
 
         }
