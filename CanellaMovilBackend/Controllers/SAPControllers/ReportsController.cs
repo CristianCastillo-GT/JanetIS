@@ -7,6 +7,7 @@ using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SAPbobsCOM;
+using System.Data.SqlClient;
 using System.Globalization;
 using static CanellaMovilBackend.Models.SAPModels.Reports.CCRequestData;
 
@@ -25,110 +26,289 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     public class ReportsController(ISAPService sapService) : ControllerBase
     {
         /// <summary>
+
         /// Obtiene el listado de la cartera consolidada
+
         /// </summary>
+
         /// <returns>Mensajes de Respuesta</returns>
+
         /// <response code="200">Ok</response>
+
         /// <response code="409">Conflict</response>
+
         [HttpGet]
+
         [ProducesResponseType(typeof(List<CarteraConsolidada>), StatusCodes.Status200OK)]
+
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
+
         public ActionResult GetCarteraConsolidada(int empresa)
+
         {
+
             try
+
             {
-                CompanyConnection companyConnection;
-                string storedProcedure;
+
+                string connectionString;
+
+                string storedProcedure, statusQuery, resultQuery;
+
+                string processId = Guid.NewGuid().ToString();
+
+                // Configuración de conexión y procedimientos
+
                 var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appSettings.json")
-                .Build();
-                // Selecciona el servidor y el procedimiento almacenado en base al parámetro empresa
+
+                    .SetBasePath(Directory.GetCurrentDirectory())
+
+                    .AddJsonFile("appSettings.json")
+
+                    .Build();
+
                 switch (empresa)
+
                 {
+
                     case 1:
-                        companyConnection = sapService.SAPB1();
+
+                        connectionString = configuration.GetConnectionString("SQLSAP");
+
                         storedProcedure = "[CRCO_STOD_CarteraCanella_ProcesarEstado_Odoo]";
+
+                        statusQuery = "SELECT Status FROM [UTILS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID";
+
+                        resultQuery = "SELECT * FROM [UTILS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
+
                         break;
+
                     case 2:
-                        companyConnection = sapService.SAPB1();
-                        storedProcedure = $"[{configuration.GetConnectionString("VESA") ?? ""}].[SBO_VESA].[dbo].[CRCO_STOD_CarteraVESA_ProcesarEstado_Odoo]";
+
+                        connectionString = configuration.GetConnectionString("VESA");
+
+                        storedProcedure = "[SBO_VESA].[dbo].[CRCO_STOD_CarteraVESA_ProcesarEstado_Odoo]";
+
+                        statusQuery = "SELECT Status FROM [UTILS_VESA].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID";
+
+                        resultQuery = "SELECT * FROM [UTILS_VESA].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
+
                         break;
+
                     case 3:
-                        companyConnection = sapService.SAPB1();
-                        storedProcedure = $"[{configuration.GetConnectionString("TALLER") ?? ""}].[TALLER].[dbo].[CRCO_STOD_CarteraMAUTO_ProcesarEstado_Odoo]";
+
+                        connectionString = configuration.GetConnectionString("TALLER");
+
+                        storedProcedure = "[TALLER].[dbo].[CRCO_STOD_CarteraMAUTO_ProcesarEstado_Odoo]";
+
+                        statusQuery = "SELECT Status FROM [UTILS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID";
+
+                        resultQuery = "SELECT * FROM [UTILS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
+
                         break;
+
                     case 4:
-                        companyConnection = sapService.SAPB1();
-                        storedProcedure = $"[{configuration.GetConnectionString("MAQUIPOS") ?? ""}].[SBO_MAQUIPOS].[dbo].[CRCO_STOD_CarteraMAQUIPOS_ProcesarEstado_Odoo]";
+
+                        connectionString = configuration.GetConnectionString("MAQUIPOS");
+
+                        storedProcedure = "[SBO_MAQUIPOS].[dbo].[CRCO_STOD_CarteraMAQUIPOS_ProcesarEstado_Odoo]";
+
+                        statusQuery = "SELECT Status FROM [UTILS_MAQUIPOS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID";
+
+                        resultQuery = "SELECT * FROM [UTILS_MAQUIPOS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
+
                         break;
+
                     default:
-                        return BadRequest(new MessageAPI() { Result = "Fail", Message = "Empresa no válida" });
+
+                        return BadRequest(new MessageAPI() { Result = "(WS-010) Fail", Message = "Empresa no válida" });
+
                 }
 
-                Company company = companyConnection.Company;
+                using (SqlConnection connection = new SqlConnection(connectionString))
 
-                Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                recordset.DoQuery($"EXEC {storedProcedure}");
-
-                if (recordset.RecordCount > 0)
                 {
-                    List<CarteraConsolidada> ListCarteraConsolidada = [];
-                    while (!recordset.EoF)
+
+                    connection.Open();
+
+                    // Ejecutar procedimiento almacenado para iniciar el proceso
+
+                    using (SqlCommand command = new SqlCommand($"EXEC {storedProcedure} @ProcessID", connection))
+
                     {
-                        CarteraConsolidada? carteraConsolidada = new()
-                        {
-                            DocEntry = Convert.ToString(recordset.Fields.Item("DocEntry").Value),
-                            DocNum = Convert.ToString(recordset.Fields.Item("DocNum").Value),
-                            TransID = Convert.ToString(recordset.Fields.Item("TransID").Value),
-                            CodVendedor = Convert.ToString(recordset.Fields.Item("CodVendedor").Value),
-                            NomVendedor = Convert.ToString(recordset.Fields.Item("NomVendedor").Value),
-                            FechaFacturacion = Convert.ToString(recordset.Fields.Item("FechaFacturacion").Value),
-                            FechaVence = Convert.ToString(recordset.Fields.Item("FechaVence").Value),
-                            PagoNumero = Convert.ToString(recordset.Fields.Item("PagoNumero").Value),
-                            FacturaSerie = Convert.ToString(recordset.Fields.Item("FacturaSerie").Value),
-                            FacturaNumero = Convert.ToString(recordset.Fields.Item("FacturaNumero").Value),
-                            NumeroDocumento = Convert.ToString(recordset.Fields.Item("NumeroDocumento").Value),
-                            CentroCosto = Convert.ToString(recordset.Fields.Item("CentroCosto").Value),
-                            TipoDocumento = Convert.ToString(recordset.Fields.Item("TipoDocumento").Value),
-                            TipoPago = Convert.ToString(recordset.Fields.Item("TipoPago").Value),
-                            ClienteCodigo = Convert.ToString(recordset.Fields.Item("ClienteCodigo").Value),
-                            ClienteNombre = Convert.ToString(recordset.Fields.Item("ClienteNombre").Value),
-                            GrupoCliente = Convert.ToString(recordset.Fields.Item("GrupoCliente").Value),
-                            DireccionFISCAL = Convert.ToString(recordset.Fields.Item("DireccionFISCAL").Value),
-                            CobradorCodigo = Convert.ToString(recordset.Fields.Item("CobradorCodigo").Value),
-                            CobradorNombre = Convert.ToString(recordset.Fields.Item("CobradorNombre").Value),
-                            TotalFactura = Convert.ToString(recordset.Fields.Item("TotalFactura").Value),
-                            TotalCuota = Convert.ToString(recordset.Fields.Item("TotalCuota").Value),
-                            TotalPagado = Convert.ToString(recordset.Fields.Item("TotalPagado").Value),
-                            TotalPagadoxCuota = Convert.ToString(recordset.Fields.Item("TotalPagadoxCuota").Value),
-                            TotalSaldo = Convert.ToString(recordset.Fields.Item("TotalSaldo").Value),
-                            SALDO_0_30 = Convert.ToString(recordset.Fields.Item("SALDO_0_30").Value),
-                            SALDO_31_60 = Convert.ToString(recordset.Fields.Item("SALDO_31_60").Value),
-                            SALDO_61_90 = Convert.ToString(recordset.Fields.Item("SALDO_61_90").Value),
-                            SALDO_91_120 = Convert.ToString(recordset.Fields.Item("SALDO_91_120").Value),
-                            SALDO_120_ = Convert.ToString(recordset.Fields.Item("SALDO_120_").Value),
-                            AL_DIA = Convert.ToString(recordset.Fields.Item("AL_DIA").Value),
-                            MORA = Convert.ToString(recordset.Fields.Item("MORA").Value),
-                            Estado = Convert.ToString(recordset.Fields.Item("Estado").Value)
-                        };
 
-                        ListCarteraConsolidada.Add(carteraConsolidada);
-                        recordset.MoveNext();
+                        command.CommandTimeout = 600; // 10 minutos
+
+                        command.Parameters.AddWithValue("@ProcessID", processId);
+
+                        command.ExecuteNonQuery();
+
                     }
-                    return Ok(ListCarteraConsolidada);
-                }
-                else
-                {
-                    return Ok(new MessageAPI() { Result = "OK", Message = "No se encontró ningun registro" });
+
+                    // Verificar el estado del proceso periódicamente
+
+                    bool isCompleted = false;
+
+                    while (!isCompleted)
+
+                    {
+
+                        using (SqlCommand statusCommand = new SqlCommand(statusQuery, connection))
+
+                        {
+
+                            statusCommand.Parameters.AddWithValue("@ProcessID", processId);
+
+                            string status = statusCommand.ExecuteScalar()?.ToString();
+
+                            if (status == "Completed")
+
+                            {
+
+                                isCompleted = true;
+
+                            }
+
+                            else
+
+                            {
+
+                                System.Threading.Thread.Sleep(5000); // Espera 5 segundos
+
+                            }
+
+                        }
+
+                    }
+
+                    // Recuperar los resultados del procedimiento almacenado
+
+                    using (SqlCommand resultCommand = new SqlCommand(resultQuery, connection))
+
+                    {
+
+                        resultCommand.Parameters.AddWithValue("@ProcessID", processId);
+
+                        using (SqlDataReader reader = resultCommand.ExecuteReader())
+
+                        {
+
+                            if (reader.HasRows)
+
+                            {
+
+                                List<CarteraConsolidada> ListCarteraConsolidada = new();
+
+                                while (reader.Read())
+
+                                {
+
+                                    CarteraConsolidada carteraConsolidada = new()
+
+                                    {
+
+                                        DocEntry = reader["DocEntry"]?.ToString(),
+
+                                        DocNum = reader["DocNum"]?.ToString(),
+
+                                        TransID = reader["TransID"]?.ToString(),
+
+                                        CodVendedor = reader["CodVendedor"]?.ToString(),
+
+                                        NomVendedor = reader["NomVendedor"]?.ToString(),
+
+                                        FechaFacturacion = reader["FechaFacturacion"]?.ToString(),
+
+                                        FechaVence = reader["FechaVence"]?.ToString(),
+
+                                        PagoNumero = reader["PagoNumero"]?.ToString(),
+
+                                        FacturaSerie = reader["FacturaSerie"]?.ToString(),
+
+                                        FacturaNumero = reader["FacturaNumero"]?.ToString(),
+
+                                        NumeroDocumento = reader["NumeroDocumento"]?.ToString(),
+
+                                        CentroCosto = reader["CentroCosto"]?.ToString(),
+
+                                        TipoDocumento = reader["TipoDocumento"]?.ToString(),
+
+                                        TipoPago = reader["TipoPago"]?.ToString(),
+
+                                        ClienteCodigo = reader["ClienteCodigo"]?.ToString(),
+
+                                        ClienteNombre = reader["ClienteNombre"]?.ToString(),
+
+                                        GrupoCliente = reader["GrupoCliente"]?.ToString(),
+
+                                        DireccionFISCAL = reader["DireccionFISCAL"]?.ToString(),
+
+                                        CobradorCodigo = reader["CobradorCodigo"]?.ToString(),
+
+                                        CobradorNombre = reader["CobradorNombre"]?.ToString(),
+
+                                        TotalFactura = reader["TotalFactura"]?.ToString(),
+
+                                        TotalCuota = reader["TotalCuota"]?.ToString(),
+
+                                        TotalPagado = reader["TotalPagado"]?.ToString(),
+
+                                        TotalPagadoxCuota = reader["TotalPagadoxCuota"]?.ToString(),
+
+                                        TotalSaldo = reader["TotalSaldo"]?.ToString(),
+
+                                        SALDO_0_30 = reader["SALDO_0_30"]?.ToString(),
+
+                                        SALDO_31_60 = reader["SALDO_31_60"]?.ToString(),
+
+                                        SALDO_61_90 = reader["SALDO_61_90"]?.ToString(),
+
+                                        SALDO_91_120 = reader["SALDO_91_120"]?.ToString(),
+
+                                        SALDO_120_ = reader["SALDO_120_"]?.ToString(),
+
+                                        AL_DIA = reader["AL_DIA"]?.ToString(),
+
+                                        MORA = reader["MORA"]?.ToString(),
+
+                                        Estado = reader["Estado"]?.ToString()
+
+                                    };
+
+                                    ListCarteraConsolidada.Add(carteraConsolidada);
+
+                                }
+
+                                return Ok(ListCarteraConsolidada);
+
+                            }
+
+                            else
+
+                            {
+
+                                return Ok(new MessageAPI() { Result = "OK", Message = "(WS-900 Cartera Liquidada o al dia) No se encontró ningún registro" });
+
+                            }
+
+                        }
+
+                    }
+
                 }
 
             }
+
             catch (Exception ex)
+
             {
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de la cartera - " + ex.Message });
+
+                return Conflict(new MessageAPI() { Result = "Fail", Message = "(WS-020) No se pudo obtener el listado de la cartera - " + ex.Message });
+
             }
+
         }
+
 
         /// <summary>
         /// Obtiene el listado de pagos realizados por clientes

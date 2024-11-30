@@ -602,14 +602,7 @@
             Controlador de reportes de SAP
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.ReportsController.GetCarteraConsolidada(System.Int32)">
-            <summary>
-            Obtiene el listado de la cartera consolidada
-            </summary>
-            <returns>Mensajes de Respuesta</returns>
-            <response code="200">Ok</response>
-            <response code="409">Conflict</response>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:CanellaMovilBackend.Controllers.SAPControllers.ReportsController.GetCarteraConsolidada(System.Int32)" -->
         <member name="M:CanellaMovilBackend.Controllers.SAPControllers.ReportsController.GetPagosPorClientes">
             <summary>
             Obtiene el listado de pagos realizados por clientes
