@@ -160,6 +160,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     oVendorPayments.TransferAccount = OVPM.TransferAccount;
                     oVendorPayments.CashSum = 0;
                     oVendorPayments.CounterReference = OVPM.CounterRef;
+                    oVendorPayments.Reference1 = OVPM.Ref1;
                     oVendorPayments.Reference2 = OVPM.Ref2;
                     oVendorPayments.JournalRemarks = OVPM.JrnlMemo;
                     oVendorPayments.TransferSum = 0;
