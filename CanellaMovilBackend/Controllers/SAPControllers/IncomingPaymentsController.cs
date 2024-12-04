@@ -236,6 +236,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         oIncomingPayments.Checks.CheckNumber = Convert.ToInt32(pay.ReferenceNumber);
                         oIncomingPayments.Checks.CountryCode = pay.CountryCode;
                         oIncomingPayments.Checks.BankCode = pay.BankCode;
+                        RCT1 tipoCheque = new RCT1();
+                        tipoCheque.U_TipoCK = pay.U_TipoCK; 
+
+                        // Asignar el tipo de cheque en SAP
+                        oIncomingPayments.Checks.UserFields.Fields.Item("U_TipoCK").Value = tipoCheque.U_TipoCK;
                         oIncomingPayments.Checks.Add();
                     }
 

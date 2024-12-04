@@ -1195,6 +1195,11 @@
             Devuelve segunda referencia unica del documento hace referencia al DocNum u otro Id unico necesario
             </summary>
         </member>
+        <member name="P:CanellaMovilBackend.Models.MessageAPI.Data">
+            <summary>
+            Lista
+            </summary>
+        </member>
         <member name="T:CanellaMovilBackend.Models.MotulTopKe.InventarioCDRioHondo">
             <summary>
             Modelo de consulta para obtener inventario SAP canella CD Rio Hondo 
@@ -2245,6 +2250,11 @@
             Codigo Bancario
             </summary>
         </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.IncomingPaymentMethod.U_TipoCK">
+            <summary>
+            Tipo de Cheque P = Personal y E = Empresa
+            </summary>
+        </member>
         <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.IncomingPaymentMethod.Sum">
             <summary>
             Suma
@@ -2433,6 +2443,16 @@
         <member name="M:CanellaMovilBackend.Models.SAPModels.IncomingPayments.ORCT.#ctor">
             <summary>
             VoucherList
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.SAPModels.IncomingPayments.RCT1">
+            <summary>
+            Detalle tipos de pagos
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.RCT1.U_TipoCK">
+            <summary>
+            Tipo de Cheque P = Personal y E = Empresa
             </summary>
         </member>
         <member name="T:CanellaMovilBackend.Models.SAPModels.IncomingPayments.RCT3">

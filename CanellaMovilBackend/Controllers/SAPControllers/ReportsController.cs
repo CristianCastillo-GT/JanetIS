@@ -77,7 +77,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                         storedProcedure = "[CRCO_STOD_CarteraCanella_ProcesarEstado_Odoo]";
 
-                        statusQuery = "SELECT Status FROM [UTILS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID";
+                        statusQuery = "SELECT Status FROM [UTILS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID ORDER BY [StartTime] DESC";
 
                         resultQuery = "SELECT * FROM [UTILS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
 
@@ -89,7 +89,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                         storedProcedure = "[SBO_VESA].[dbo].[CRCO_STOD_CarteraVESA_ProcesarEstado_Odoo]";
 
-                        statusQuery = "SELECT Status FROM [UTILS_VESA].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID";
+                        statusQuery = "SELECT Status FROM [UTILS_VESA].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID ORDER BY [StartTime] DESC";
 
                         resultQuery = "SELECT * FROM [UTILS_VESA].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
 
@@ -101,7 +101,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                         storedProcedure = "[TALLER].[dbo].[CRCO_STOD_CarteraMAUTO_ProcesarEstado_Odoo]";
 
-                        statusQuery = "SELECT Status FROM [UTILS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID";
+                        statusQuery = "SELECT Status FROM [UTILS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID ORDER BY [StartTime] DESC";
 
                         resultQuery = "SELECT * FROM [UTILS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
 
@@ -113,7 +113,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                         storedProcedure = "[SBO_MAQUIPOS].[dbo].[CRCO_STOD_CarteraMAQUIPOS_ProcesarEstado_Odoo]";
 
-                        statusQuery = "SELECT Status FROM [UTILS_MAQUIPOS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID";
+                        statusQuery = "  SELECT Status FROM [UTILS_MAQUIPOS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID ORDER BY [StartTime] DESC";
 
                         resultQuery = "SELECT * FROM [UTILS_MAQUIPOS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
 
@@ -121,7 +121,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                     default:
 
-                        return BadRequest(new MessageAPI() { Result = "(WS-010) Fail", Message = "Empresa no válida" });
+                        return BadRequest(new MessageAPI() { Result = "Fail", Message = "Empresa no válida", CodeNum = "(020-010)" });
 
                 }
 
@@ -279,7 +279,13 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                                 }
 
-                                return Ok(ListCarteraConsolidada);
+                                return Ok(new MessageAPI()
+                                {
+                                    Result = "OK",
+                                    Message = "SQL procesó la cartera y debe de llevar al menos un registro",
+                                    CodeNum = "(900)",
+                                    Data = ListCarteraConsolidada
+                                });
 
                             }
 
@@ -287,7 +293,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                             {
 
-                                return Ok(new MessageAPI() { Result = "OK", Message = "(WS-900 Cartera Liquidada o al dia) No se encontró ningún registro" });
+                                return Ok(new MessageAPI() { Result = "OK", Message = "(Cartera Liquidada o al dia) No se encontró ningún registro", CodeNum = "(010)" });
 
                             }
 
@@ -303,7 +309,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
             {
 
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "(WS-020) No se pudo obtener el listado de la cartera - " + ex.Message });
+                return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de la cartera - " + ex.Message, CodeNum = "(020-020)" });
 
             }
 

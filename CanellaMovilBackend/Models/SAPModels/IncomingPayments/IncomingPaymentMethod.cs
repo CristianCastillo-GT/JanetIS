@@ -33,6 +33,11 @@
         public string BankCode { get; set; } = string.Empty;
 
         /// <summary>
+        /// Tipo de Cheque P = Personal y E = Empresa
+        /// </summary>
+        public string U_TipoCK { get; set; } = string.Empty;
+
+        /// <summary>
         /// Suma
         /// </summary>
         public string Sum { get; set; } = string.Empty;

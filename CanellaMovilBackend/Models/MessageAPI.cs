@@ -25,5 +25,11 @@
         /// Devuelve segunda referencia unica del documento hace referencia al DocNum u otro Id unico necesario
         /// </summary>
         public string CodeNum { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Lista
+        /// </summary>
+        public object Data { get; set; }
+
     }
 }
