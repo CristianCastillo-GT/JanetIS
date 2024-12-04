@@ -115,6 +115,11 @@ namespace CanellaMovilBackend.Models.SAPModels.OutgoingPayments
         /// <summary>
         /// Referencia / Numero de Referencia en asiento contable
         /// </summary>
+        public string? Ref1 { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Referencia / Numero de Referencia en asiento contable
+        /// </summary>
         public string? Ref2 { get; set; } = string.Empty;
 
         /// <summary>
