@@ -146,6 +146,11 @@ namespace CanellaMovilBackend.Models.SAPModels.IncomingPayments
         public string U_Cobrador { get; set; }
 
         /// <summary>
+        /// Listado de Facturas
+        /// </summary>
+        public List<Invoice>? Invoice { get; set; }
+
+        /// <summary>
         /// VoucherList / Listado de direcciones
         /// </summary>
         //[Required]
@@ -184,6 +189,7 @@ namespace CanellaMovilBackend.Models.SAPModels.IncomingPayments
         public ORCT()
         {
             IncomingPaymentMethod = [];
+            Invoice = [];
         }
 
     }

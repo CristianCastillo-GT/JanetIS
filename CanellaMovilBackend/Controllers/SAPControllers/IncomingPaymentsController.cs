@@ -257,6 +257,23 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     }
                 }
 
+                // Verificar si el tipo de pago es "3" (anticipo)
+                if (ORCT.U_TipoPago != "3")
+                {
+
+                    foreach (var invoice in ORCT.Invoice ?? new List<Invoice>())
+                {
+                    oIncomingPayments.Invoices.DocEntry = invoice.DocEntry; // ID interno de la factura
+                    oIncomingPayments.Invoices.SumApplied = double.Parse(invoice.SumApplied); // Monto aplicado a la factura
+                    oIncomingPayments.Invoices.Add();
+                }
+                }
+                else
+                {
+                    oIncomingPayments.Remarks += " (Anticipo)";
+                }
+
+
                 // Intentar crear el pago en SAP
                 if (oIncomingPayments.Add() == 0)
                 {

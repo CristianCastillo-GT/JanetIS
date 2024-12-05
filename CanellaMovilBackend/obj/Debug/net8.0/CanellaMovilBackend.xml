@@ -2275,6 +2275,26 @@
             Cantidad deudora
             </summary>
         </member>
+        <member name="T:CanellaMovilBackend.Models.SAPModels.IncomingPayments.Invoice">
+            <summary>
+            Facxturas
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.Invoice.DocEntry">
+            <summary>
+            Identificador interno de la factura (DocEntry en SAP).
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.Invoice.SumApplied">
+            <summary>
+            Monto aplicado a esta factura.
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.Invoice.Comments">
+            <summary>
+            Comentarios o referencia opcional.
+            </summary>
+        </member>
         <member name="T:CanellaMovilBackend.Models.SAPModels.IncomingPayments.ORCT">
             <summary>
             Objeto de depositos
@@ -2408,6 +2428,11 @@
         <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.ORCT.U_Cobrador">
             <summary>
             Vendedor
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.ORCT.Invoice">
+            <summary>
+            Listado de Facturas
             </summary>
         </member>
         <member name="P:CanellaMovilBackend.Models.SAPModels.IncomingPayments.ORCT.IncomingPaymentMethod">
@@ -2938,6 +2963,11 @@
         <member name="P:CanellaMovilBackend.Models.SAPModels.OutgoingPayments.OVPM.CounterRef">
             <summary>
             Referencia / Numero de Referencia
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.OutgoingPayments.OVPM.Ref1">
+            <summary>
+            Referencia / Numero de Referencia en asiento contable
             </summary>
         </member>
         <member name="P:CanellaMovilBackend.Models.SAPModels.OutgoingPayments.OVPM.Ref2">
