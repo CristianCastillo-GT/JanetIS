@@ -71,7 +71,7 @@ namespace CanellaMovilBackend.Controllers.SISCONControllers
 
                             if (oItem.GetByKey(nodo.CodigoArticulo))
                             {
-                                double precioArticuloSAP = oItem.AvgStdPrice;
+                                double precioArticuloSAP = nodo.precio;
                                 bool articuloDepreciable = precioArticuloSAP >= double.Parse(nodo.MontoMinimoAF);
 
                                 // Creación del activo fijo en SAP

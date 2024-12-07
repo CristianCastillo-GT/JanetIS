@@ -27,6 +27,10 @@ namespace CanellaMovilBackend.Models.SISCONModels
         /// </summary>
         public string Serie { get; set; } = string.Empty;
         /// <summary>
+        /// Precio del Equipo con IVA
+        /// </summary>
+        public double precio { get; set; }
+        /// <summary>
         /// Número del despacho
         /// </summary>
         [Required]
