@@ -26,121 +26,295 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     public class ReportsController(ISAPService sapService) : ControllerBase
     {
         /// <summary>
+
         /// Obtiene el listado de la cartera consolidada
+
         /// </summary>
+
         /// <returns>Mensajes de Respuesta</returns>
+
         /// <response code="200">Ok</response>
+
         /// <response code="409">Conflict</response>
+
         [HttpGet]
+
         [ProducesResponseType(typeof(List<CarteraConsolidada>), StatusCodes.Status200OK)]
+
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
+
         public ActionResult GetCarteraConsolidada(int empresa)
+
         {
+
             try
+
             {
+
                 string connectionString;
-                string storedProcedure; 
+
+                string storedProcedure, statusQuery, resultQuery;
+
+                string processId = Guid.NewGuid().ToString();
+
+                // Configuración de conexión y procedimientos
 
                 var configuration = new ConfigurationBuilder()
+
                     .SetBasePath(Directory.GetCurrentDirectory())
+
                     .AddJsonFile("appSettings.json")
+
                     .Build();
 
-                // Seleccionar la cadena de conexión y procedimiento almacenado según la empresa
                 switch (empresa)
+
                 {
+
                     case 1:
+
                         connectionString = configuration.GetConnectionString("SQLSAP");
+
                         storedProcedure = "[CRCO_STOD_CarteraCanella_ProcesarEstado_Odoo]";
+
+                        statusQuery = "SELECT Status FROM [UTILS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID ORDER BY [StartTime] DESC";
+
+                        resultQuery = "SELECT * FROM [UTILS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
+
                         break;
+
                     case 2:
+
                         connectionString = configuration.GetConnectionString("VESA");
+
                         storedProcedure = "[SBO_VESA].[dbo].[CRCO_STOD_CarteraVESA_ProcesarEstado_Odoo]";
+
+                        statusQuery = "SELECT Status FROM [UTILS_VESA].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID ORDER BY [StartTime] DESC";
+
+                        resultQuery = "SELECT * FROM [UTILS_VESA].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
+
                         break;
+
                     case 3:
+
                         connectionString = configuration.GetConnectionString("TALLER");
+
                         storedProcedure = "[TALLER].[dbo].[CRCO_STOD_CarteraMAUTO_ProcesarEstado_Odoo]";
+
+                        statusQuery = "SELECT Status FROM [UTILS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID ORDER BY [StartTime] DESC";
+
+                        resultQuery = "SELECT * FROM [UTILS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
+
                         break;
+
                     case 4:
+
                         connectionString = configuration.GetConnectionString("MAQUIPOS");
+
                         storedProcedure = "[SBO_MAQUIPOS].[dbo].[CRCO_STOD_CarteraMAQUIPOS_ProcesarEstado_Odoo]";
+
+                        statusQuery = "  SELECT Status FROM [UTILS_MAQUIPOS].[dbo].CRCO_ControlTable WHERE ProcessID = @ProcessID ORDER BY [StartTime] DESC";
+
+                        resultQuery = "SELECT * FROM [UTILS_MAQUIPOS].[dbo].CRCO_ResultadoCartera WHERE ProcessID = @ProcessID";
+
                         break;
+
                     default:
-                        return BadRequest(new MessageAPI() { Result = "Fail", Message = "Empresa no válida" });
+
+                        return BadRequest(new MessageAPI() { Result = "Fail", Message = "Empresa no válida", CodeNum = "(020-010)" });
+
                 }
 
-                // Conexión a la base de datos
                 using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand($"EXEC {storedProcedure}", connection))
-                    {
-                        // Configurar el tiempo de espera de 600 segundos (10 minutos)
-                        command.CommandTimeout = 600;
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                {
+
+                    connection.Open();
+
+                    // Ejecutar procedimiento almacenado para iniciar el proceso
+
+                    using (SqlCommand command = new SqlCommand($"EXEC {storedProcedure} @ProcessID", connection))
+
+                    {
+
+                        command.CommandTimeout = 600; // 10 minutos
+
+                        command.Parameters.AddWithValue("@ProcessID", processId);
+
+                        command.ExecuteNonQuery();
+
+                    }
+
+                    // Verificar el estado del proceso periódicamente
+
+                    bool isCompleted = false;
+
+                    while (!isCompleted)
+
+                    {
+
+                        using (SqlCommand statusCommand = new SqlCommand(statusQuery, connection))
+
                         {
-                            if (reader.HasRows)
+
+                            statusCommand.Parameters.AddWithValue("@ProcessID", processId);
+
+                            string status = statusCommand.ExecuteScalar()?.ToString();
+
+                            if (status == "Completed")
+
                             {
+
+                                isCompleted = true;
+
+                            }
+
+                            else
+
+                            {
+
+                                System.Threading.Thread.Sleep(5000); // Espera 5 segundos
+
+                            }
+
+                        }
+
+                    }
+
+                    // Recuperar los resultados del procedimiento almacenado
+
+                    using (SqlCommand resultCommand = new SqlCommand(resultQuery, connection))
+
+                    {
+
+                        resultCommand.Parameters.AddWithValue("@ProcessID", processId);
+
+                        using (SqlDataReader reader = resultCommand.ExecuteReader())
+
+                        {
+
+                            if (reader.HasRows)
+
+                            {
+
                                 List<CarteraConsolidada> ListCarteraConsolidada = new();
+
                                 while (reader.Read())
+
                                 {
+
                                     CarteraConsolidada carteraConsolidada = new()
+
                                     {
+
                                         DocEntry = reader["DocEntry"]?.ToString(),
+
                                         DocNum = reader["DocNum"]?.ToString(),
+
                                         TransID = reader["TransID"]?.ToString(),
+
                                         CodVendedor = reader["CodVendedor"]?.ToString(),
+
                                         NomVendedor = reader["NomVendedor"]?.ToString(),
+
                                         FechaFacturacion = reader["FechaFacturacion"]?.ToString(),
+
                                         FechaVence = reader["FechaVence"]?.ToString(),
+
                                         PagoNumero = reader["PagoNumero"]?.ToString(),
+
                                         FacturaSerie = reader["FacturaSerie"]?.ToString(),
+
                                         FacturaNumero = reader["FacturaNumero"]?.ToString(),
+
                                         NumeroDocumento = reader["NumeroDocumento"]?.ToString(),
+
                                         CentroCosto = reader["CentroCosto"]?.ToString(),
+
                                         TipoDocumento = reader["TipoDocumento"]?.ToString(),
+
                                         TipoPago = reader["TipoPago"]?.ToString(),
+
                                         ClienteCodigo = reader["ClienteCodigo"]?.ToString(),
+
                                         ClienteNombre = reader["ClienteNombre"]?.ToString(),
+
                                         GrupoCliente = reader["GrupoCliente"]?.ToString(),
+
                                         DireccionFISCAL = reader["DireccionFISCAL"]?.ToString(),
+
                                         CobradorCodigo = reader["CobradorCodigo"]?.ToString(),
+
                                         CobradorNombre = reader["CobradorNombre"]?.ToString(),
+
                                         TotalFactura = reader["TotalFactura"]?.ToString(),
+
                                         TotalCuota = reader["TotalCuota"]?.ToString(),
+
                                         TotalPagado = reader["TotalPagado"]?.ToString(),
+
                                         TotalPagadoxCuota = reader["TotalPagadoxCuota"]?.ToString(),
+
                                         TotalSaldo = reader["TotalSaldo"]?.ToString(),
+
                                         SALDO_0_30 = reader["SALDO_0_30"]?.ToString(),
+
                                         SALDO_31_60 = reader["SALDO_31_60"]?.ToString(),
+
                                         SALDO_61_90 = reader["SALDO_61_90"]?.ToString(),
+
                                         SALDO_91_120 = reader["SALDO_91_120"]?.ToString(),
+
                                         SALDO_120_ = reader["SALDO_120_"]?.ToString(),
+
                                         AL_DIA = reader["AL_DIA"]?.ToString(),
+
                                         MORA = reader["MORA"]?.ToString(),
+
                                         Estado = reader["Estado"]?.ToString()
+
                                     };
 
                                     ListCarteraConsolidada.Add(carteraConsolidada);
+
                                 }
-                                return Ok(ListCarteraConsolidada);
+
+                                return Ok(new MessageAPI()
+                                {
+                                    Result = "OK",
+                                    Message = "SQL procesó la cartera y debe de llevar al menos un registro",
+                                    CodeNum = "(900)",
+                                    Data = ListCarteraConsolidada
+                                });
+
                             }
+
                             else
+
                             {
-                                return Ok(new MessageAPI() { Result = "OK", Message = "No se encontró ningún registro" });
+
+                                return Ok(new MessageAPI() { Result = "OK", Message = "(Cartera Liquidada o al dia) No se encontró ningún registro", CodeNum = "(010)" });
+
                             }
+
                         }
+
                     }
+
                 }
-            }
-            catch (Exception ex)
-            {
-                return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de la cartera - " + ex.Message });
+
             }
 
+            catch (Exception ex)
+
+            {
+
+                return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de la cartera - " + ex.Message, CodeNum = "(020-020)" });
+
+            }
 
         }
+
 
         /// <summary>
         /// Obtiene el listado de pagos realizados por clientes
@@ -281,5 +455,4 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
             }
         }
     }
-
 }
