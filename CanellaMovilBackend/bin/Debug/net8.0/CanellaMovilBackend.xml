@@ -5077,6 +5077,11 @@
             Serie del equipo
             </summary>
         </member>
+        <member name="P:CanellaMovilBackend.Models.SISCONModels.DeliveryNodo.precio">
+            <summary>
+            Precio del Equipo con IVA
+            </summary>
+        </member>
         <member name="P:CanellaMovilBackend.Models.SISCONModels.DeliveryNodo.DespachoNo">
             <summary>
             Número del despacho

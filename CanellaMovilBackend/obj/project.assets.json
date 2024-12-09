@@ -2300,26 +2300,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\infogaperez\\.nuget\\packages\\": {}
+    "C:\\Users\\infojreyes\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\infogaperez\\Desktop\\JANET 2.0\\JanetIS\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
+      "projectUniqueName": "C:\\Users\\infojreyes\\Desktop\\Proyectos\\Nuevo Janet\\JanetIS\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
       "projectName": "CanellaMovilBackend",
-      "projectPath": "C:\\Users\\infogaperez\\Desktop\\JANET 2.0\\JanetIS\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
-      "packagesPath": "C:\\Users\\infogaperez\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\infogaperez\\Desktop\\JANET 2.0\\JanetIS\\CanellaMovilBackend\\obj\\",
+      "projectPath": "C:\\Users\\infojreyes\\Desktop\\Proyectos\\Nuevo Janet\\JanetIS\\CanellaMovilBackend\\CanellaMovilBackend.csproj",
+      "packagesPath": "C:\\Users\\infojreyes\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\infojreyes\\Desktop\\Proyectos\\Nuevo Janet\\JanetIS\\CanellaMovilBackend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\infogaperez\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\infojreyes\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -2327,11 +2326,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\infogaperez\\Desktop\\JANET 2.0\\JanetIS\\ConexionesSQL\\ConexionesSQL.csproj": {
-              "projectPath": "C:\\Users\\infogaperez\\Desktop\\JANET 2.0\\JanetIS\\ConexionesSQL\\ConexionesSQL.csproj"
+            "C:\\Users\\infojreyes\\Desktop\\Proyectos\\Nuevo Janet\\JanetIS\\ConexionesSQL\\ConexionesSQL.csproj": {
+              "projectPath": "C:\\Users\\infojreyes\\Desktop\\Proyectos\\Nuevo Janet\\JanetIS\\ConexionesSQL\\ConexionesSQL.csproj"
             },
-            "C:\\Users\\infogaperez\\Desktop\\JANET 2.0\\JanetIS\\WebAPIs\\WebAPIs.csproj": {
-              "projectPath": "C:\\Users\\infogaperez\\Desktop\\JANET 2.0\\JanetIS\\WebAPIs\\WebAPIs.csproj"
+            "C:\\Users\\infojreyes\\Desktop\\Proyectos\\Nuevo Janet\\JanetIS\\WebAPIs\\WebAPIs.csproj": {
+              "projectPath": "C:\\Users\\infojreyes\\Desktop\\Proyectos\\Nuevo Janet\\JanetIS\\WebAPIs\\WebAPIs.csproj"
             }
           }
         }
@@ -2407,7 +2406,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
