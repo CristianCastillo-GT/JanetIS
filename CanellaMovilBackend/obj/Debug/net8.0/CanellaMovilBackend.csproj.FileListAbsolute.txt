@@ -351,3 +351,4 @@ C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\ob
 C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\obj\Debug\net8.0\CanellaMovilBackend.pdb
 C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\obj\Debug\net8.0\CanellaMovilBackend.genruntimeconfig.cache
 C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\obj\Debug\net8.0\ref\CanellaMovilBackend.dll
+C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\appsettings.json
