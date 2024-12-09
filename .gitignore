@@ -271,6 +271,3 @@ CanellaMovilBackend/Properties/PublishProfiles/
 *.CanellaMovilBackend/Properties/PublishProfiles/
 CanellaMovilBackend/Properties/PublishProfiles/FolderProfile.pubxml
 *FolderProfile.pubxml
-CanellaMovilBackend/obj/Debug/net8.0
-ConexionesSQL/obj/Debug/net8.0
-WebAPIs/obj/Debug/net8.0
