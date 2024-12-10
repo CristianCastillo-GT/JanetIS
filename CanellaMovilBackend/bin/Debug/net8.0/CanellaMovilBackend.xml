@@ -5081,12 +5081,12 @@
             ID de Traslado en SAP
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.FromWarehouse">
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.BodegaOrigenSAP">
             <summary>
             FromWareHouse / Bodega Proveniente
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.ToWarehouse">
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.BodegaDestinoSAP">
             <summary>
             ToWareHouse / Bodega Destino
             </summary>
@@ -5096,7 +5096,7 @@
             ItemCode / Codigo de Articulo
             </summary>
         </member>
-        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.SerialNumber">
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.Chasis">
             <summary>
             SerialNumber / Chasis
             </summary>
@@ -5119,6 +5119,11 @@
         <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.MensajeExito">
             <summary>
             MensajeExito / Mensaje de Exito de Traslado
+            </summary>
+        </member>
+        <member name="M:CanellaMovilBackend.Models.StockTransfer.OWTR.#ctor">
+            <summary>
+            Lista de traslados
             </summary>
         </member>
         <member name="T:CanellaMovilBackend.Models.SISCONModels.DeliveryNodo">

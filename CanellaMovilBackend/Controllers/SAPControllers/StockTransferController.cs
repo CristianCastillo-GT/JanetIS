@@ -25,11 +25,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
     /// <summary>
     ///  Controlador Transferencias Ensamble
     /// </summary>
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Produces("application/json")]
-    //[ServiceFilter(typeof(RoleFilter))]
+    [ServiceFilter(typeof(RoleFilter))]
     [ServiceFilter(typeof(ResultAllFilter))]
 
     public class StockTransferController : ControllerBase
@@ -60,16 +60,8 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         public ActionResult BulkCreateTransfer(List<OWTR> OWTRList)
         {
             int nErr = 0;
-            //string errMsg = string.Empty;
-            //string docEntry = string.Empty;
             string sql = string.Empty;
             string sqlSAP = string.Empty;
-
-            //int ENS_TrasladosSAPID = 0;
-            //string FromWarehouse = string.Empty;
-            //string ToWarehouse = string.Empty;
-            //string ItemCode = string.Empty;
-            //string SerialNumber = string.Empty;
 
 
 
@@ -91,23 +83,19 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     StockTransfer? transfer = (StockTransfer)company.GetBusinessObject(BoObjectTypes.oStockTransfer);
 
                     transfer.DocDate = DateTime.Now;
-                    transfer.FromWarehouse = OWTR.FromWarehouse;
-                    transfer.ToWarehouse = OWTR.ToWarehouse;
-
-                    transfer.UserFields.Fields.Item("U_DoctoGenServ").Value = "N";
-                    transfer.UserFields.Fields.Item("U_AlmacenDestino").Value = OWTR.ToWarehouse;
-                    transfer.UserFields.Fields.Item("U_SucursalDestino").Value = OWTR.ToWarehouse;
-                    transfer.UserFields.Fields.Item("U_DoctoRef").Value = "00045";
+                    transfer.Lines.ItemCode = OWTR.ItemCode;
+                    transfer.Lines.SerialNumbers.ManufacturerSerialNumber = OWTR.Chasis;
+                    transfer.FromWarehouse = OWTR.BodegaOrigenSAP;
+                    transfer.ToWarehouse = OWTR.BodegaDestinoSAP;
                     transfer.UserFields.Fields.Item("U_DoctoRefNo").Value = OWTR.PedidoID;
                     transfer.UserFields.Fields.Item("U_PedidoID").Value = OWTR.PedidoID;
-
-
-                    transfer.Lines.ItemCode = OWTR.ItemCode;
-                    transfer.Lines.FromWarehouseCode = OWTR.FromWarehouse;
-                    transfer.Lines.WarehouseCode = OWTR.ToWarehouse;
-
+                    transfer.UserFields.Fields.Item("U_DoctoGenServ").Value = "N";
+                    transfer.UserFields.Fields.Item("U_AlmacenDestino").Value = OWTR.BodegaDestinoSAP;
+                    transfer.UserFields.Fields.Item("U_SucursalDestino").Value = OWTR.BodegaDestinoSAP;
+                    transfer.UserFields.Fields.Item("U_DoctoRef").Value = "00045";
+                    transfer.Lines.FromWarehouseCode = OWTR.BodegaOrigenSAP;
+                    transfer.Lines.WarehouseCode = OWTR.BodegaDestinoSAP;
                     transfer.Lines.SerialNumbers.BaseLineNumber = transfer.Lines.LineNum;
-                    transfer.Lines.SerialNumbers.ManufacturerSerialNumber = OWTR.SerialNumber;
                     transfer.Lines.SerialNumbers.Quantity = 1;
 
                     if (transfer.Add() != 0)

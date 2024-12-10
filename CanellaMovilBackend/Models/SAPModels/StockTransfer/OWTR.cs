@@ -17,22 +17,22 @@ namespace CanellaMovilBackend.Models.StockTransfer
         /// <summary>
         /// FromWareHouse / Bodega Proveniente
         /// </summary>
-        public string FromWarehouse { get; set; } = string.Empty;
+        public string? BodegaOrigenSAP { get; set; } = string.Empty;
 
         /// <summary>
         /// ToWareHouse / Bodega Destino
         /// </summary>
-        public string ToWarehouse { get; set; } = string.Empty;
+        public string? BodegaDestinoSAP { get; set; } = string.Empty;
 
         /// <summary>
         /// ItemCode / Codigo de Articulo
         /// </summary>
-        public string ItemCode { get; set; } = string.Empty;
+        public string? ItemCode { get; set; } = string.Empty;
 
         /// <summary>
         /// SerialNumber / Chasis
         /// </summary>
-        public string? SerialNumber { get; set; } = string.Empty;
+        public string? Chasis { get; set; } = string.Empty;
 
         /// <summary>
         /// SerialNumber / Chasis
@@ -52,7 +52,13 @@ namespace CanellaMovilBackend.Models.StockTransfer
         /// <summary>
         /// MensajeExito / Mensaje de Exito de Traslado
         /// </summary>
-        public string MensajeExito { get; set; } = string.Empty;
+        public string? MensajeExito { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Lista de traslados
+        /// </summary>
+        public OWTR() { 
+        }
 
     }
 }
