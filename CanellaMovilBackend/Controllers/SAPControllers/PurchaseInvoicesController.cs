@@ -87,6 +87,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 string doctoserie = oPurchaseInvoice.UserFields.Fields.Item("U_DoctoSerie").Value;
                 oPurchaseInvoice.DocType = oGoodsReceipt.DocType;
 
+                oPurchaseInvoice.DiscountPercent = oGoodsReceipt.DiscountPercent;
 
                 // Se asigna el NumAtCard dependiendo si existe un dato en DoctoSerie
                 oPurchaseInvoice.NumAtCard = !string.IsNullOrEmpty(doctoserie) ? doctoserie + "-" + doctono : doctono;
@@ -112,10 +113,13 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     oPurchaseInvoice.Lines.Price = oGoodsReceipt.Lines.Price;
                     oPurchaseInvoice.Lines.WarehouseCode = oGoodsReceipt.Lines.WarehouseCode;
 
+                    oPurchaseInvoice.Lines.LineTotal = oGoodsReceipt.Lines.LineTotal;
+
                     //Propiedades de los impuestos
                     oPurchaseInvoice.Lines.TaxCode = oGoodsReceipt.Lines.TaxCode;
                     oPurchaseInvoice.Lines.VatGroup = oGoodsReceipt.Lines.VatGroup;
                     oPurchaseInvoice.Lines.UserFields.Fields.Item("U_Tipo").Value = oGoodsReceipt.Lines.UserFields.Fields.Item("U_Tipo").Value;
+                    oPurchaseInvoice.Lines.DiscountPercent = oGoodsReceipt.Lines.DiscountPercent;
 
                     string TipoRet = oPurchaseInvoice.Lines.UserFields.Fields.Item("U_Tipo").Value;
 
@@ -166,6 +170,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 totalFactura = Math.Round(totalFactura, 2);
 
                 double totalRetencion = 0.0;
+                int VerificarRetencionISR = 0;
 
                 // Se obtienen todas las retenciones establecidas para los proveedores
                 BusinessPartners oBusinessPartner = (BusinessPartners)company.GetBusinessObject(BoObjectTypes.oBusinessPartners);
@@ -199,16 +204,31 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                             {
                                 withholdingTaxCodes.Add(oBusinessPartner.BPWithholdingTax.WTCode);
                             }
-                            else if (oBusinessPartner.BPWithholdingTax.WTCode == "7ISR" && totalFactura > 30000.00)
-                            {
-                                withholdingTaxCodes.Add(oBusinessPartner.BPWithholdingTax.WTCode);
-                            }
                             else if (oBusinessPartner.BPWithholdingTax.WTCode == "ISR5" && totalFactura > 30000.00)
                             {
-                                withholdingTaxCodes.Add(oBusinessPartner.BPWithholdingTax.WTCode);
+                                //withholdingTaxCodes.Add(oBusinessPartner.BPWithholdingTax.WTCode);
+                                VerificarRetencionISR += 1;
                             }
+                            else if (oBusinessPartner.BPWithholdingTax.WTCode == "7ISR" && totalFactura > 30000.00)
+                            {
+                                //withholdingTaxCodes.Add(oBusinessPartner.BPWithholdingTax.WTCode);
+                                VerificarRetencionISR += 1;
+                            }
+                            
 
                         }
+                    }
+
+                    //Para insertar ISR 5 en caso el proveedor no tenga ISR 7 y se cumpla la condicion de Total Factura > 30000
+                    if(VerificarRetencionISR == 1)
+                    {
+                        withholdingTaxCodes.Add("ISR5");
+
+                    //Si el proveedor tiene ISR 5 e ISR 7, se coloca el código de ISR 7 y se hace el cálculo requerido
+                    }else if (VerificarRetencionISR == 2)
+                    {
+                        withholdingTaxCodes.Add("7ISR");
+
                     }
 
 
@@ -337,7 +357,6 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
 
                 //Para verificar total final con los cálculos respectivos
                 totalDocumentoFinal = Math.Round(totalFactura + totalImpuestos - totalRetencion,2);
-
 
                 //oPurchaseInvoice.UserFields.Fields.Item("U_DoctoTotal").Value = totalDocumentoFinal;
                 oPurchaseInvoice.UserFields.Fields.Item("U_DoctoRef").Value = "00005";

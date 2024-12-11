@@ -355,10 +355,7 @@
           "System.Data.SqlClient": "4.8.6"
         },
         "runtime": {
-          "ConexionesSQL.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "ConexionesSQL.dll": {}
         }
       },
       "WebAPIs/1.0.0": {
@@ -367,10 +364,7 @@
           "Microsoft.Extensions.Configuration.Json": "8.0.0"
         },
         "runtime": {
-          "WebAPIs.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "WebAPIs.dll": {}
         }
       }
     }
