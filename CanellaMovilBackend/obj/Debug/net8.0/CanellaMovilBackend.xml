@@ -4,6 +4,27 @@
         <name>CanellaMovilBackend</name>
     </assembly>
     <members>
+        <member name="T:CanellaMovilBackend.Controllers.ArchivosLaserFiche.ValuesController">
+             <summary>
+             Controlador de Laserfiche
+             </summary>
+            [Authorize]
+            [Authorize]
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.ArchivosLaserFiche.ValuesController.#ctor(CanellaMovilBackend.Service.SAPService.ISAPService)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sapService"></param>
+            
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.ArchivosLaserFiche.ValuesController.MoveFiles(CanellaMovilBackend.Models.ArchivosLaserFiche.LaserFicheRequestData.RequestGetDirectoriosLaserFiche)">
+            <summary>
+            Traslada archivos de un destino a otro
+            </summary>
+            <response code="200">Traslado de archivos exitoso</response>
+            <response code="409">Mensaje de error</response>
+        </member>
         <member name="T:CanellaMovilBackend.Controllers.CanonControllers.CanonController">
             <summary>
             Controlador de canon
@@ -908,6 +929,51 @@
         </member>
         <member name="M:CanellaMovilBackend.Middleware.RateLimitingMiddlewareExtensions.UseRateLimitingMiddleware(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
             <summary>
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.ArchivosLaserFiche.DataArchivos">
+            <summary>
+            Modelo de consulta para obtener los archivos de SAP
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.ArchivosLaserFiche.DataArchivos.DocNum">
+            <summary>
+            DocNum - Codigo de Documento
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.ArchivosLaserFiche.DataArchivos.ObjType">
+            <summary>
+            ObjType - Tipe de Documento
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.ArchivosLaserFiche.DataArchivos.FileName">
+            <summary>
+            FileName - Nombre de Archivo
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.ArchivosLaserFiche.DataArchivos.INPath">
+            <summary>
+            INPath - Path Origen
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.ArchivosLaserFiche.DataArchivos.OUTPath">
+            <summary>
+            OutPath - Path Destino
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.ArchivosLaserFiche.LaserFicheRequestData">
+            <summary>
+            Modelo de datos para la petición de articulos motul sap canella rio hondo
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.ArchivosLaserFiche.LaserFicheRequestData.RequestGetDirectoriosLaserFiche">
+            <summary>
+            Modelo de datos para la petición de inventario de motul
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.ArchivosLaserFiche.LaserFicheRequestData.RequestGetDirectoriosLaserFiche.clsEmpresa">
+            <summary>
+            clsEmpresa es la empresa que estamos consultando
             </summary>
         </member>
         <member name="T:CanellaMovilBackend.Models.AuthenticationTokenUser">
