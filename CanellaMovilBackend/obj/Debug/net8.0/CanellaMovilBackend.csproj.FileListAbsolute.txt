@@ -352,6 +352,7 @@ C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\ob
 C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\obj\Debug\net8.0\CanellaMovilBackend.genruntimeconfig.cache
 C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\obj\Debug\net8.0\ref\CanellaMovilBackend.dll
 C:\Users\infojreyes\Desktop\Proyectos\Nuevo Janet\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\appsettings.json
+C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\appsettings.json
 C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\CanellaMovilBackend.exe
 C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\nlog.config
 C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\CanellaMovilBackend.deps.json
@@ -410,4 +411,3 @@ C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\obj\Deb
 C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\obj\Debug\net8.0\CanellaMovilBackend.pdb
 C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\obj\Debug\net8.0\CanellaMovilBackend.genruntimeconfig.cache
 C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\obj\Debug\net8.0\ref\CanellaMovilBackend.dll
-C:\Users\infoagarcia\Downloads\JANETS\JANET2\JanetIS\CanellaMovilBackend\bin\Debug\net8.0\appsettings.json

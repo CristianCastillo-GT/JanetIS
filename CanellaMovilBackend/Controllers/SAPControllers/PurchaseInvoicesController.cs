@@ -6,6 +6,7 @@ using CanellaMovilBackend.Models.SAPModels.PurchaseInvoices;
 using CanellaMovilBackend.Service.SAPService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SAPbobsCOM;
 
 namespace CanellaMovilBackend.Controllers.SAPControllers
@@ -69,10 +70,18 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 // Configura propiedades de la Factura de Proveedores
                 oPurchaseInvoice.DocObjectCode = BoObjectTypes.oPurchaseInvoices;
                 oPurchaseInvoice.CardCode = oGoodsReceipt.CardCode;
+
+                //Contabilizacion
                 oPurchaseInvoice.DocDate = DateTime.Now;
-                
-                oPurchaseInvoice.DocDueDate = DateTime.Now.AddDays(30); //Vencimiento a los 30 días
-                oPurchaseInvoice.TaxDate = DateTime.Now;
+
+                //Vencimiento Lo puede calcular automaticamente SAP
+                //oPurchaseInvoice.DocDueDate = DateTime.Now.AddDays(30); //Vencimiento a los 30 días
+
+                //Documento
+                oPurchaseInvoice.TaxDate = oGoodsReceipt.TaxDate;
+
+
+
                 oPurchaseInvoice.Series = 7;
 
                 //Se configuran los campos de usuario de la factura
@@ -119,9 +128,13 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     oPurchaseInvoice.Lines.TaxCode = oGoodsReceipt.Lines.TaxCode;
                     oPurchaseInvoice.Lines.VatGroup = oGoodsReceipt.Lines.VatGroup;
                     oPurchaseInvoice.Lines.UserFields.Fields.Item("U_Tipo").Value = oGoodsReceipt.Lines.UserFields.Fields.Item("U_Tipo").Value;
+
+                   
                     oPurchaseInvoice.Lines.DiscountPercent = oGoodsReceipt.Lines.DiscountPercent;
 
-                    string TipoRet = oPurchaseInvoice.Lines.UserFields.Fields.Item("U_Tipo").Value;
+                    
+
+                        string TipoRet = oPurchaseInvoice.Lines.UserFields.Fields.Item("U_Tipo").Value;
 
                     //Validacion si es tipo Articulo o Servicio
                     if (oPurchaseInvoice.DocType == BoDocumentTypes.dDocument_Items)
@@ -159,6 +172,11 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                         //Total de impuestos
                         totalImpuestos += impuestoLinea;
 
+                    }
+
+                    if (oPurchaseInvoice.Lines.DiscountPercent < 0)
+                    {
+                        oPurchaseInvoice.Lines.DiscountPercent = 0.00;
                     }
 
                     oPurchaseInvoice.Lines.Add();
