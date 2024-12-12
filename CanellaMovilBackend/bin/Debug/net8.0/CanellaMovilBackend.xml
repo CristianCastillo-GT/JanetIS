@@ -496,6 +496,25 @@
             <response code="200">Creación exitosa</response>
             <response code="409">Mensaje de error</response>
         </member>
+        <member name="T:CanellaMovilBackend.Controllers.SAPControllers.PurchaseInvoicesController">
+            <summary>
+            Controlador de Pagos Recibidos
+            </summary>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.PurchaseInvoicesController.#ctor(CanellaMovilBackend.Service.SAPService.ISAPService)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sapService"></param>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.PurchaseInvoicesController.CreatePurchaseInvoice(CanellaMovilBackend.Models.SAPModels.PurchaseInvoices.OPCH)">
+            <summary>
+            Crea una Factura para Proveedores
+            </summary>
+            <returns>Codigos de respuesta</returns>
+            <response code="200">Creación exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
         <member name="T:CanellaMovilBackend.Controllers.SAPControllers.QuotationSaleController">
             <summary>
             Controlador del socio de negocios
@@ -554,14 +573,7 @@
             Controlador de reportes de SAP
             </summary>
         </member>
-        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.ReportsController.GetCarteraConsolidada(System.Int32)">
-            <summary>
-            Obtiene el listado de la cartera consolidada
-            </summary>
-            <returns>Mensajes de Respuesta</returns>
-            <response code="200">Ok</response>
-            <response code="409">Conflict</response>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:CanellaMovilBackend.Controllers.SAPControllers.ReportsController.GetCarteraConsolidada(System.Int32)" -->
         <member name="M:CanellaMovilBackend.Controllers.SAPControllers.ReportsController.GetPagosPorClientes">
             <summary>
             Obtiene el listado de pagos realizados por clientes
@@ -996,6 +1008,11 @@
         <member name="P:CanellaMovilBackend.Models.MessageAPI.CodeNum">
             <summary>
             Devuelve segunda referencia unica del documento hace referencia al DocNum u otro Id unico necesario
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.MessageAPI.Data">
+            <summary>
+            Lista
             </summary>
         </member>
         <member name="T:CanellaMovilBackend.Models.MotulTopKe.InventarioCDRioHondo">
@@ -2718,6 +2735,11 @@
             Referencia / Numero de Referencia
             </summary>
         </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.OutgoingPayments.OVPM.Ref1">
+            <summary>
+            Referencia / Numero de Referencia en asiento contable
+            </summary>
+        </member>
         <member name="P:CanellaMovilBackend.Models.SAPModels.OutgoingPayments.OVPM.Ref2">
             <summary>
             Referencia / Numero de Referencia en asiento contable
@@ -3166,6 +3188,26 @@
         <member name="P:CanellaMovilBackend.Models.SAPModels.PageCanon.SWRequestData.RequestGetStockWhareHouse.ItemCode">
             <summary>
             Codigo de articulo de sap
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.SAPModels.PurchaseInvoices.OPCH">
+            <summary>
+            Objeto de Factura Proveedores
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.PurchaseInvoices.OPCH.docEntry">
+            <summary>
+            Código de la Entrada de Mercancías
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.PurchaseInvoices.OPCH.DocSerie">
+            <summary>
+            Número de Serie de la Factura
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.PurchaseInvoices.OPCH.DocNum">
+            <summary>
+            Número de la Factura
             </summary>
         </member>
         <member name="T:CanellaMovilBackend.Models.SAPModels.Reports.CarteraConsolidada">
@@ -4803,6 +4845,11 @@
         <member name="P:CanellaMovilBackend.Models.SISCONModels.DeliveryNodo.Serie">
             <summary>
             Serie del equipo
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SISCONModels.DeliveryNodo.precio">
+            <summary>
+            Precio del Equipo con IVA
             </summary>
         </member>
         <member name="P:CanellaMovilBackend.Models.SISCONModels.DeliveryNodo.DespachoNo">
