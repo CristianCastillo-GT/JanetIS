@@ -91,7 +91,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                     transfer.UserFields.Fields.Item("U_PedidoID").Value = OWTR.PedidoID;
                     transfer.UserFields.Fields.Item("U_DoctoGenServ").Value = "N";
                     transfer.UserFields.Fields.Item("U_AlmacenDestino").Value = OWTR.BodegaDestinoSAP;
-                    transfer.UserFields.Fields.Item("U_SucursalDestino").Value = OWTR.BodegaDestinoSAP;
+                    transfer.UserFields.Fields.Item("U_SucursalDestino").Value = OWTR.CodSAPBodega;
                     transfer.UserFields.Fields.Item("U_DoctoRef").Value = "00045";
                     transfer.Lines.FromWarehouseCode = OWTR.BodegaOrigenSAP;
                     transfer.Lines.WarehouseCode = OWTR.BodegaDestinoSAP;
