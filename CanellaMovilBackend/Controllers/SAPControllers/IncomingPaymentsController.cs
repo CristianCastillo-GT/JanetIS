@@ -305,6 +305,117 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
             }
 
         }
-    }
+
+        /// <summary>
+        /// Cancela un pago Individual en SAP usando DocNum
+        /// </summary>
+        /// <returns>Codigos de respuesta</returns>
+        /// <response code="200">Cancelación exitosa</response>
+        /// <response code="409">Mensaje de error</response>
+
+        [HttpPost]
+        [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
+        public ActionResult CancelSinglePayment(int CodeNum)
+        {
+            try
+            {
+                // Establecer la conexión con SAP
+                CompanyConnection companyConnection = this.sapService.SAPB1();
+                Company company = companyConnection.Company;
+
+                // Verificar que la conexión se haya establecido correctamente
+                if (company == null || !company.Connected)
+                {
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "Error de conexión a SAP. La conexión no se pudo establecer.", Code = string.Empty });
+                }
+
+                // Obtener el objeto de pago a partir del DocNum
+                Recordset recordset = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
+                string query = $"SELECT DocEntry FROM ORCT WHERE DocNum = '{CodeNum}'";
+                recordset.DoQuery(query);
+
+                if (!recordset.EoF)
+                {
+                    // Obtener el DocEntry correspondiente
+                    int docEntry = int.Parse(recordset.Fields.Item("DocEntry").Value.ToString());
+
+                    // Obtener el objeto de pago basado en DocEntry
+                    Payments oIncomingPayments = (Payments)company.GetBusinessObject(BoObjectTypes.oIncomingPayments);
+                    if (oIncomingPayments.GetByKey(docEntry))
+                    {
+                        // Cancelar el pago
+                        if (oIncomingPayments.Cancel() == 0)
+                        {
+                            // Verificar la cancelación en SAP
+                            var canceledDocEntry = company.GetNewObjectKey();
+                            Payments canceledPayment = (Payments)company.GetBusinessObject(BoObjectTypes.oIncomingPayments);
+
+                            if (int.TryParse(canceledDocEntry, out int canceledDocEntryParsed) &&
+                                canceledPayment.GetByKey(canceledDocEntryParsed))
+                            {
+                                return Ok(new MessageAPI()
+                                {
+                                    Result = "OK",
+                                    Message = "Pago cancelado exitosamente.",
+                                    Code = canceledPayment.DocNum.ToString()
+                                });
+                            }
+                            else
+                            {
+                                return Conflict(new MessageAPI()
+                                {
+                                    Result = "Fail",
+                                    Message = "No se verificó la cancelación correctamente.",
+                                    Code = string.Empty
+                                });
+                            }
+                        }
+                        else
+                        {
+                            // Manejo de errores de SAP
+                            company.GetLastError(out int errCode, out string errMsg);
+                            return Conflict(new MessageAPI()
+                            {
+                                Result = "Fail",
+                                Message = $"Error al cancelar el pago: {errMsg} (Código: {errCode})",
+                                Code = CodeNum.ToString()
+                            });
+                        }
+                    }
+                    else
+                    {
+                        return Conflict(new MessageAPI()
+                        {
+                            Result = "Fail",
+                            Message = $"No se encontró el pago con DocEntry: {docEntry}",
+                            Code = CodeNum.ToString()
+                        });
+                    }
+                }
+                else
+                {
+                    return Conflict(new MessageAPI()
+                    {
+                        Result = "Fail",
+                        Message = $"El DocNum proporcionado ({CodeNum}) no se encontró en la base de datos.",
+                        Code = CodeNum.ToString()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones generales
+                return Conflict(new MessageAPI()
+                {
+                    Result = "Fail",
+                    Message = "No se pudo cancelar el pago - error: " + ex.Message,
+                    Code = CodeNum.ToString()
+                });
+            }
+
+        }
+
+        }
 }
 

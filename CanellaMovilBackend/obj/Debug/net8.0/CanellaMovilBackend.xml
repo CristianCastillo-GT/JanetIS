@@ -379,6 +379,14 @@
             <response code="200">Creación exitosa</response>
             <response code="409">Mensaje de error</response>
         </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.IncomingPaymentsController.CancelSinglePayment(System.Int32)">
+            <summary>
+            Cancela un pago Individual en SAP usando DocNum
+            </summary>
+            <returns>Codigos de respuesta</returns>
+            <response code="200">Cancelación exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
         <member name="T:CanellaMovilBackend.Controllers.SAPControllers.IncomingPaymentsCTController">
             <summary>
              Controladore Pagos Recibidos CT
