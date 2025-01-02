@@ -48,6 +48,11 @@ namespace CanellaMovilBackend.Models.SAPModels.Journal_Entry
         public string TransCode { get; set; } = string.Empty;
 
         /// <summary>
+        /// Tipo de transacción
+        /// </summary>
+        public int Number { get; set; } 
+
+        /// <summary>
         /// Detalle del asiento 
         /// </summary>
         public List<JDT1>? JournalLine { get; set; } = [];

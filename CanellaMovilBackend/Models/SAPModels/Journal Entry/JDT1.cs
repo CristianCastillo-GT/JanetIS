@@ -24,5 +24,21 @@
         /// Comentario
         /// </summary>
         public string LineMemo { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Centro Costo incorrecto
+        /// </summary>
+        public string CostingCode { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Monto a buscar
+        /// </summary>
+        public double Amount { get; set; }
+
+        /// <summary>
+        /// Centro Costo correcto
+        /// </summary>
+        public string NewCostingCode { get; set; } = string.Empty;
+
     }
 }
