@@ -313,6 +313,9 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
         /// <response code="200">Cancelación exitosa</response>
         /// <response code="409">Mensaje de error</response>
 
+
+        // asuntosestudiantiles@umg.edu.gt
+
         [HttpPost]
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]

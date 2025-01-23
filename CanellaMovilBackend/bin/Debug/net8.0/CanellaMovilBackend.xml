@@ -333,6 +333,25 @@
             <response code="200">Creación exitosa</response>
             <response code="409">Mensaje de error</response>
         </member>
+        <member name="T:CanellaMovilBackend.Controllers.SAPControllers.GoodsReceiptController">
+            <summary>
+            Controlador de Pagos Recibidos
+            </summary>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.GoodsReceiptController.#ctor(CanellaMovilBackend.Service.SAPService.ISAPService)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sapService"></param>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.GoodsReceiptController.CancelGoodsReceipt(System.Int32)">
+            <summary>
+            Cancela ítems específicos de una entrada de mercancía en SAP usando el DocNum
+            </summary>
+            <returns>Códigos de respuesta</returns>
+            <response code="200">Cancelación exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
         <member name="T:CanellaMovilBackend.Controllers.SAPControllers.HumanResourcesController">
             <summary>
             Controlador de Recursos Humanos en SAP
@@ -547,6 +566,33 @@
         <member name="M:CanellaMovilBackend.Controllers.SAPControllers.PurchaseInvoicesController.CreatePurchaseInvoice(CanellaMovilBackend.Models.SAPModels.PurchaseInvoices.OPCH)">
             <summary>
             Crea una Factura para Proveedores
+            </summary>
+            <returns>Codigos de respuesta</returns>
+            <response code="200">Creación exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
+        <member name="T:CanellaMovilBackend.Controllers.SAPControllers.PurchaseOrderController">
+            <summary>
+            Controlador de Pagos Recibidos
+            </summary>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.PurchaseOrderController.#ctor(CanellaMovilBackend.Service.SAPService.ISAPService)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sapService"></param>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.PurchaseOrderController.CancelPurchaseOrder(System.Int32)">
+            <summary>
+            Cancela una Orden de Compra/Pedido
+            </summary>
+            <returns>Codigos de respuesta</returns>
+            <response code="200">Creación exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.PurchaseOrderController.ClosePurchaseOrder(System.Int32)">
+            <summary>
+            Cierra una Orden de Compra/Pedido
             </summary>
             <returns>Codigos de respuesta</returns>
             <response code="200">Creación exitosa</response>
