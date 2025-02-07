@@ -144,5 +144,68 @@ namespace CanellaMovilBackend.Controllers.PaginasWebControllers
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de inventario de maquinaria: " + ex.Message });
             }
         }
+
+        /// <summary>
+        /// Obtiene los datos de inventario de sap canella tiendas propias
+        /// </summary>
+        /// <response code="200">Obtención de datos exitoso</response>
+        /// <response code="409">Mensaje de error</response>
+        [HttpPost]
+        [ProducesResponseType(typeof(List<InventarioMaquinaria>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
+        public ActionResult GetInventarioTiendasPropias(MRequestData.RequestGetInventarioMaquinaria request)
+        {
+            try
+            {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
+                request.AddId ??= "";
+                request.clsEmpresa ??= "";
+                request.PlataformaConsumo ??= "";
+
+                // Obtener el objeto categoria de la API de DI
+                Recordset recordsetUT = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
+                recordsetUT.DoQuery("EXEC WSPW_SELECT_INVENTORY_TIENDAS_PROPIAS '" + request.AddId + "', '" + request.clsEmpresa + "', '" + request.PlataformaConsumo + "'");
+
+                if (recordsetUT.RecordCount > 0)
+                {
+                    List<InventarioTiendasPropias> List_Inventario = [];
+                    while (!recordsetUT.EoF)
+                    {
+                        InventarioTiendasPropias? code = new()
+                        {
+                            ItemCode = (string)recordsetUT.Fields.Item("ItemCode").Value,
+                            ItemName = (string)recordsetUT.Fields.Item("ItemName").Value,
+                            Fotografia = (string)recordsetUT.Fields.Item("Fotografia").Value,
+                            CodeDivision = (string)recordsetUT.Fields.Item("CodeDivision").Value,
+                            NameDivision = (string)recordsetUT.Fields.Item("NameDivision").Value,
+                            CodeCategoria = (string)recordsetUT.Fields.Item("CodeCategoria").Value,
+                            NameCategoria = (string)recordsetUT.Fields.Item("NameCategoria").Value,
+                            CodeTipo = (string)recordsetUT.Fields.Item("CodeTipo").Value,
+                            NameTipo = (string)recordsetUT.Fields.Item("NameTipo").Value,
+                            PriceList5 = (string)recordsetUT.Fields.Item("PriceList5").Value,
+                            PriceList6 = (string)recordsetUT.Fields.Item("PriceList6").Value,
+                            Stock_PD002 = (string)recordsetUT.Fields.Item("Stock_PD002").Value,
+                            Stock_PH006 = (string)recordsetUT.Fields.Item("Stock_PH006").Value,
+                            Stock_PH007 = (string)recordsetUT.Fields.Item("Stock_PH007").Value,
+                            Stock_PH010 = (string)recordsetUT.Fields.Item("Stock_PH010").Value,
+                            Stock_PM010_PM013_PM022 = (string)recordsetUT.Fields.Item("Stock_PM010_PM013_PM022").Value
+                        };
+                        List_Inventario.Add(code);
+                        recordsetUT.MoveNext();
+                    }
+                    return Ok(List_Inventario);
+                }
+                else
+                {
+                    return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo encontrar la lista con informacion del inventario de tiendas propias" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo consultar lista de inventario de tiendas propias: " + ex.Message });
+            }
+        }
     }
 }
