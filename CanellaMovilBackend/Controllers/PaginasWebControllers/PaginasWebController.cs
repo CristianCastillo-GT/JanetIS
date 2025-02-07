@@ -175,22 +175,22 @@ namespace CanellaMovilBackend.Controllers.PaginasWebControllers
                     {
                         InventarioTiendasPropias? code = new()
                         {
-                            ItemCode = (string)recordsetUT.Fields.Item("ItemCode").Value,
-                            ItemName = (string)recordsetUT.Fields.Item("ItemName").Value,
-                            Fotografia = (string)recordsetUT.Fields.Item("Fotografia").Value,
-                            CodeDivision = (string)recordsetUT.Fields.Item("CodeDivision").Value,
-                            NameDivision = (string)recordsetUT.Fields.Item("NameDivision").Value,
-                            CodeCategoria = (string)recordsetUT.Fields.Item("CodeCategoria").Value,
-                            NameCategoria = (string)recordsetUT.Fields.Item("NameCategoria").Value,
-                            CodeTipo = (string)recordsetUT.Fields.Item("CodeTipo").Value,
-                            NameTipo = (string)recordsetUT.Fields.Item("NameTipo").Value,
-                            PriceList5 = (string)recordsetUT.Fields.Item("PriceList5").Value,
-                            PriceList6 = (string)recordsetUT.Fields.Item("PriceList6").Value,
-                            Stock_PD002 = (string)recordsetUT.Fields.Item("Stock_PD002").Value,
-                            Stock_PH006 = (string)recordsetUT.Fields.Item("Stock_PH006").Value,
-                            Stock_PH007 = (string)recordsetUT.Fields.Item("Stock_PH007").Value,
-                            Stock_PH010 = (string)recordsetUT.Fields.Item("Stock_PH010").Value,
-                            Stock_PM010_PM013_PM022 = (string)recordsetUT.Fields.Item("Stock_PM010_PM013_PM022").Value
+                            ItemCode = (string)recordsetUT.Fields.Item("ItemCode").Value.ToString(),
+                            ItemName = (string)recordsetUT.Fields.Item("ItemName").Value.ToString(),
+                            Fotografia = (string)recordsetUT.Fields.Item("Fotografia").Value.ToString(),
+                            CodeDivision = (string)recordsetUT.Fields.Item("CodeDivision").Value.ToString(),
+                            NameDivision = (string)recordsetUT.Fields.Item("NameDivision").Value.ToString(),
+                            CodeCategoria = (string)recordsetUT.Fields.Item("CodeCategoria").Value.ToString(),
+                            NameCategoria = (string)recordsetUT.Fields.Item("NameCategoria").Value.ToString(),
+                            CodeTipo = (string)recordsetUT.Fields.Item("CodeTipo").Value.ToString(),
+                            NameTipo = (string)recordsetUT.Fields.Item("NameTipo").Value.ToString(),
+                            PriceList5 = (string)recordsetUT.Fields.Item("PriceList5").Value.ToString(),
+                            PriceList6 = (string)recordsetUT.Fields.Item("PriceList6").Value.ToString(),
+                            Stock_PD002 = (string)recordsetUT.Fields.Item("Stock_PD002").Value.ToString(),
+                            Stock_PH006 = (string)recordsetUT.Fields.Item("Stock_PH006").Value.ToString(),
+                            Stock_PH007 = (string)recordsetUT.Fields.Item("Stock_PH007").Value.ToString(),
+                            Stock_PH010 = (string)recordsetUT.Fields.Item("Stock_PH010").Value.ToString(),
+                            Stock_PM010_PM013_PM022 = (string)recordsetUT.Fields.Item("Stock_PM010_PM013_PM022").Value.ToString()
                         };
                         List_Inventario.Add(code);
                         recordsetUT.MoveNext();
