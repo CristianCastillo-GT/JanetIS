@@ -452,6 +452,14 @@
             <response code="200">Creación exitosa</response>
             <response code="409">Mensaje de error</response>
         </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.JournalEntry.UpdateJournal(CanellaMovilBackend.Models.SAPModels.Journal_Entry.OJDT)">
+            <summary>
+            Actualiza un asiento contable en SAP
+            </summary>
+            <returns>Codigos de respuesta</returns>
+            <response code="200">Creación exitosa</response>
+            <response code="409">Mensaje de error</response>
+        </member>
         <member name="T:CanellaMovilBackend.Controllers.SAPControllers.OrderSaleController">
             <summary>
             Controlador del socio de negocios
@@ -648,6 +656,25 @@
             <returns>Retorna un listado de las llamadas de servicio abiertas</returns>
             <response code="200">obtención de datos exitosa</response>
             <response code="409">Mensaje de error</response>
+        </member>
+        <member name="T:CanellaMovilBackend.Controllers.SAPControllers.StockTransferController">
+            <summary> 
+             Controlador Transferencias Ensamble
+            </summary>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.StockTransferController.#ctor(CanellaMovilBackend.Service.SAPService.ISAPService)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sapService"></param>
+        </member>
+        <member name="M:CanellaMovilBackend.Controllers.SAPControllers.StockTransferController.BulkCreateTransfer(System.Collections.Generic.List{CanellaMovilBackend.Models.StockTransfer.OWTR})">
+            <summary>
+            Crea transferencias de Ensamble a SAP
+            </summary>
+            <returns>Codigos de respuesta</returns>
+            <response code="200">Creacion exitosa</response>
+            <response code="409">Creacion exitosa</response>
         </member>
         <member name="T:CanellaMovilBackend.Controllers.SAPControllers.TeamCard">
             <summary>
@@ -2586,6 +2613,21 @@
             Comentario
             </summary>
         </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.Journal_Entry.JDT1.CostingCode">
+            <summary>
+            Centro Costo incorrecto
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.Journal_Entry.JDT1.Amount">
+            <summary>
+            Monto a buscar
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.Journal_Entry.JDT1.NewCostingCode">
+            <summary>
+            Centro Costo correcto
+            </summary>
+        </member>
         <member name="T:CanellaMovilBackend.Models.SAPModels.Journal_Entry.OJDT">
             <summary>
             Modelo de datos para los asientos contables
@@ -2627,6 +2669,11 @@
             </summary>
         </member>
         <member name="P:CanellaMovilBackend.Models.SAPModels.Journal_Entry.OJDT.TransCode">
+            <summary>
+            Tipo de transacción
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.SAPModels.Journal_Entry.OJDT.Number">
             <summary>
             Tipo de transacción
             </summary>
@@ -4886,6 +4933,61 @@
         <member name="P:CanellaMovilBackend.Models.CQMModels.OCRDMassive.E_Mail">
             <summary>
             E-Mail / Correo electrónico
+            </summary>
+        </member>
+        <member name="T:CanellaMovilBackend.Models.StockTransfer.OWTR">
+            <summary>
+            Objeto de transferencias
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.ENS_TrasladoSAPID">
+            <summary>
+            ID de Traslado en SAP
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.BodegaOrigenSAP">
+            <summary>
+            FromWareHouse / Bodega Proveniente
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.BodegaDestinoSAP">
+            <summary>
+            ToWareHouse / Bodega Destino
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.ItemCode">
+            <summary>
+            ItemCode / Codigo de Articulo
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.Chasis">
+            <summary>
+            SerialNumber / Chasis
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.PedidoID">
+            <summary>
+            SerialNumber / Chasis
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.CodSAPBodega">
+            <summary>
+            CodSAPBodega / Codigo de Bodega en SAP
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.ErrorSAP">
+            <summary>
+            ErrorSAP / Error que devuelve SAP
+            </summary>
+        </member>
+        <member name="P:CanellaMovilBackend.Models.StockTransfer.OWTR.MensajeExito">
+            <summary>
+            MensajeExito / Mensaje de Exito de Traslado
+            </summary>
+        </member>
+        <member name="M:CanellaMovilBackend.Models.StockTransfer.OWTR.#ctor">
+            <summary>
+            Lista de traslados
             </summary>
         </member>
         <member name="T:CanellaMovilBackend.Models.SISCONModels.DeliveryNodo">
