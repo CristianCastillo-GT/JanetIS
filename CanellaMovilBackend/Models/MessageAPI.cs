@@ -29,5 +29,11 @@
         /// Lista
         /// </summary>
         public object Data { get; set; }
+
+        /// <summary>
+        /// Numero de registro para la creación de activo fijo OITMAF
+        /// </summary>
+        public int NoRegistro { get; set; }
+
     }
 }
