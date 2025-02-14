@@ -30,6 +30,10 @@
         /// Lista
         /// </summary>
         public object Data { get; set; }
+        /// <summary>
+        /// Numero de registro en creación activos fijo OITM 
+        /// </summary>
+        public int NoRegistro { get; set; }
 
     }
 }

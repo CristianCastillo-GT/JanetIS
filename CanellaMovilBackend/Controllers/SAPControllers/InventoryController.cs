@@ -338,5 +338,87 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 return Conflict(new MessageAPI() { Result = "Fail", Message = "No se pudo obtener el listado de items - Error" + ex.Message });
             }
         }
+        /// <summary>
+        /// Obtiene el correlativo para el activo
+        /// </summary>
+        /// <returns>Retorna un JSON con el dato</returns>
+        /// <response code="200">Obtención de datos exitoso</response>
+        /// <response code="409">Mensaje de error</response>
+        [HttpPost]
+        [ProducesResponseType(typeof(List<OITMAF>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageAPI), StatusCodes.Status409Conflict)]
+        public ActionResult GetCreationFixedAssets(List<OITMAF> OITMList)
+        {
+            try
+            {
+                CompanyConnection companyConnection = sapService.SAPB1();
+                Company company = companyConnection.Company;
+
+                int noRegistro = 0;
+                List<MessageAPI> messageAPI = [];
+                foreach (OITMAF OITM in OITMList)
+                {
+                    Items items = (Items)company.GetBusinessObject(BoObjectTypes.oItems);
+
+                    if ((OITM.ItemType.Equals("F") && OITM.GrpCod.Equals("281")))
+                    {
+                        items.Series = int.Parse(OITM.Series);
+                        items.ItemName = OITM.ItemName;
+                        items.ForeignName = OITM.FrgnName;
+
+                        items.ItemType = ItemTypeEnum.itFixedAssets;
+                        items.ItemsGroupCode = int.Parse(OITM.GrpCod);
+                        items.AssetClass = OITM.AssetesClass;
+                        items.AssetGroup = OITM.AssetsGroup;
+                        if (!string.IsNullOrEmpty(OITM.AssetsNoSer))
+                        {
+                            items.AssetSerialNumber = OITM.AssetsNoSer;
+                        }
+                        items.Employee = int.Parse(OITM.Employee);
+                        items.UserFields.Fields.Item("U_NoContrato").Value = OITM.U_NoContrato;
+                        items.DistributionRules.DistributionRule = OITM.OcrCode;
+                        items.DistributionRules.ValidFrom = DateTime.Parse(OITM.ValidForm);
+
+                        if (OITM.Series.Equals("362"))
+                        {
+                            items.AttributeGroups.Attribute1 = OITM.AttriTxt1;
+                            items.AttributeGroups.Attribute2 = OITM.AttriTxt2;
+                            items.AttributeGroups.Attribute3 = OITM.AttriTxt3;
+                            items.AttributeGroups.Attribute4 = OITM.AttriTxt4;
+                            items.AttributeGroups.Attribute5 = OITM.AttriTxt5;
+                            items.AttributeGroups.Attribute6 = OITM.AttriTxt6;
+                            items.AttributeGroups.Attribute7 = OITM.AttriTxt7;
+                            items.AttributeGroups.Attribute8 = OITM.AttriTxt8;
+                            items.AttributeGroups.Attribute9 = OITM.AttriTxt9;
+                            items.AttributeGroups.Attribute10 = OITM.AttriTxt10;
+                            items.AttributeGroups.Attribute11 = OITM.AttriTxt11;
+                        }
+
+                        if (items.Add() == 0)
+                        {
+                            noRegistro = OITM.NoRegistro;
+                            string itemCode = company.GetNewObjectKey();
+
+                            messageAPI.Add(new MessageAPI() { Result = "OK", Message = "Se creo el activo fijo", Code = itemCode, NoRegistro = noRegistro });
+                        }
+                        else
+                        {
+                            company.GetLastErrorDescription();
+                            messageAPI.Add(new MessageAPI() { Result = "Fail", Message = "No se termino el proceso correctamente", Code = string.Empty, NoRegistro = noRegistro });
+                        }
+                    }
+
+                }
+                return Ok(messageAPI);
+            }
+            catch (Exception ex)
+            {
+                return Conflict(new MessageAPI
+                {
+                    Result = "Fail",
+                    Message = "Error al procesar los artículos: " + ex.Message
+                });
+            }
+        }
     }
 }
