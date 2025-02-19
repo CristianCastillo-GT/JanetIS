@@ -214,7 +214,7 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                 oIncomingPayments.Reference1 = ORCT.Ref1;
                 oIncomingPayments.JournalRemarks = ORCT.JrnlMemo;
                 oIncomingPayments.TransferSum = 0;
-                oIncomingPayments.Series = 244;
+                oIncomingPayments.Series = 221;
 
                 // Campos personalizados
                 oIncomingPayments.UserFields.Fields.Item("U_OCDocNum").Value = ORCT.U_OCDocNum;
