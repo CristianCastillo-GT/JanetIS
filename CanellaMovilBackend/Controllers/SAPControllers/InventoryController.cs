@@ -394,17 +394,26 @@ namespace CanellaMovilBackend.Controllers.SAPControllers
                             items.AttributeGroups.Attribute11 = OITM.AttriTxt11;
                         }
 
+                        noRegistro = OITM.NoRegistro;
                         if (items.Add() == 0)
                         {
-                            noRegistro = OITM.NoRegistro;
                             string itemCode = company.GetNewObjectKey();
 
                             messageAPI.Add(new MessageAPI() { Result = "OK", Message = "Se creo el activo fijo", Code = itemCode, NoRegistro = noRegistro });
                         }
                         else
                         {
-                            company.GetLastErrorDescription();
-                            messageAPI.Add(new MessageAPI() { Result = "Fail", Message = "No se termino el proceso correctamente", Code = string.Empty, NoRegistro = noRegistro });
+                            string error = company.GetLastErrorDescription();
+                            if (error.Contains("410009"))
+                            {
+                                error = "Número de serie ya existe en otro activo fijo";
+                                messageAPI.Add(new MessageAPI() { Result = "Fail", Message = error, Code = string.Empty, NoRegistro = noRegistro });
+                            }
+                            else 
+                            {
+                                messageAPI.Add(new MessageAPI() { Result = "Fail", Message = "No se puedo crear el activo fijo, favor de revisar la informacion", Code = string.Empty, NoRegistro = noRegistro });
+                            }
+                            
                         }
                     }
 
